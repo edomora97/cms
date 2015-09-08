@@ -37,29 +37,66 @@ function get_score_class (score, max_score) {
     }
 }
 
+update_label = function(label, score, max_score) {
+    label.attr("data-score", score);
+
+    if (max_score != undefined)
+        label.text(score + " / " + max_score);
+    else
+        label.text(score);
+
+    label.removeClass("score_0").removeClass("score_0_100").removeClass("score_100");
+    label.addClass(get_score_class(score, max_score));
+
+    label.removeClass("hidden");
+}
+
 update_submission_row = function (submission_id, data) {
     var row = $("#submission_list tbody tr[data-submission=\"" + submission_id + "\"]");
     row.attr("data-status", data["status"]);
     row.children("td.status").html(data["status_text"]);
+
+    if (data["status"] != {{ SubmissionResult.SCORED }} &&
+            data["status"] != {{ SubmissionResult.COMPILATION_FAILED }}) {
+        schedule_update_submission_row(submission_id);
+        return;
+    }
+
+    var task = $(".page-header h1").text().match(/\((.*)\)/)[1];
+    var label = $(".score-label[data-task-name=\"" + task + "\"]");
+
+    var pre_score = label.attr('data-score');
+    var max_score = label.attr('data-max-score');
+
     if (data["status"] == {{ SubmissionResult.SCORED }}) {
-        if (data["public_score"] != undefined) {
-            var public_score = data["public_score"];
-            if (data["max_public_score"] != undefined) {
-                row.children("td.public_score").addClass(get_score_class(parseFloat(data["public_score"]), parseFloat(data["max_public_score"])));
-                public_score += " / " + data["max_public_score"];
-            }
-            row.children("td.public_score").removeClass("undefined").html(public_score);
-        }
+
+        var cur_score = -1;
+
         if (data["score"] != undefined) {
             var score = data["score"];
             if (data["max_score"] != undefined) {
                 row.children("td.total_score").addClass(get_score_class(parseFloat(data["score"]), parseFloat(data["max_score"])));
                 score += " / " + data["max_score"];
+                cur_score = data["score"];
             }
             row.children("td.total_score").removeClass("undefined").html(score);
         }
-    } else if (data["status"] != {{ SubmissionResult.COMPILATION_FAILED }}) {
-        schedule_update_submission_row(submission_id);
+        if (data["public_score"] != undefined) {
+            var public_score = data["public_score"];
+            if (data["max_public_score"] != undefined) {
+                row.children("td.public_score").addClass(get_score_class(parseFloat(data["public_score"]), parseFloat(data["max_public_score"])));
+                public_score += " / " + data["max_public_score"];
+                cur_score = data["public_score"];
+            }
+            row.children("td.public_score").removeClass("undefined").html(public_score);
+        }
+
+        if (+cur_score > +pre_score)
+            update_label(label, cur_score, max_score);
+
+    } else if (data["status"] == {{ SubmissionResult.COMPILATION_FAILED }}) {
+        if (pre_score < 0)
+            update_label(label, 0, max_score);
     }
 }
 

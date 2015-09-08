@@ -39,8 +39,10 @@ import tornado.locale
 
 import gevent
 
+from cms.db import Submission
 from cms.db.filecacher import FileCacher
 from cmscommon.datetime import make_datetime, utc
+from cms.grading.scoretypes import get_score_type
 
 
 logger = logging.getLogger(__name__)
@@ -329,6 +331,82 @@ def get_score_class(score, max_score):
     else:
         return "score_0_100"
 
+def get_submission_score(submission):
+	"""Return the final score of a submission. If the task has some
+	public testcases, the score refers to these ones, otherwise the
+	total score is returned if the token was played.
+
+	submission (Submission): the submission.
+
+	return (float): the score of the submission. -1 if hidden or not
+		available
+
+	"""
+	if submission is None:
+		return -1
+
+	task = submission.task
+	score_type = get_score_type(dataset=task.active_dataset)
+	if score_type is None:
+		return -1
+
+	result = submission.get_result()
+	if result is None:
+		return -1
+
+	if score_type.max_public_score != 0 and result.public_score is not None:
+		return round(result.public_score, task.score_precision)
+
+	if score_type.max_public_score != score_type.max_score:
+		if submission.token is not None and result.score is not None:
+			return round(result.score, task.score_precision)
+	return -1
+
+def get_task_max_score(task):
+	"""Return the maximum score the contestant can get from the task. If
+	the task has some public testcases the return value is the max public
+	score.
+
+	task (Task): the task
+
+	return (float): the maximum score (or the maximum public score). -1
+	if not available
+
+	"""
+	score_type = get_score_type(dataset=task.active_dataset)
+
+	if score_type is None:
+		return -1
+
+	if score_type.max_public_score != 0:
+		return round(score_type.max_public_score, task.score_precision)
+	if score_type.max_public_score != score_type.max_score:
+		if score_type.max_score != 0:
+			return round(score_type.max_score, task.score_precision)
+
+	return -1
+
+def get_best_submission(session, task, participation):
+	"""Find the submission of a user of a particular task that has the
+	maximiun public score
+
+	session (Session): a Session.
+	task (Task): the task.
+	participation (participation): the user.
+
+	return (Submission): the submission with the maximum score, None if
+		there aren't submissions.
+
+	"""
+
+	submissions = session.query(Submission)\
+		.filter(Submission.participation == participation)\
+		.filter(Submission.task == task)\
+		.all()
+
+	if len(submissions) == 0:
+		return None
+	return sorted(submissions, key=lambda submission: get_submission_score(submission), reverse=True)[0]
 
 # Dummy function to mark strings for translation
 def N_(*unused_args, **unused_kwargs):

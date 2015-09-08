@@ -958,3 +958,8 @@ td.token_rules p:last-child {
 #lang {
     width: 100px;
 }
+
+.label.score_0     { background-color: hsla(0, 100%, 50%, 0.75); }
+.label.score_0_100 { background-color: hsla(50, 100%, 50%, 1); }
+.label.score_100   { background-color: hsla(120, 85%, 50%, 1); }
+.label.hidden { display: none; }

@@ -2,9 +2,9 @@
 {% import time %}
 {% import json %}
 {% from cms import LANGUAGE_NAMES, LANGUAGE_TO_SOURCE_EXT_MAP %}
-{% from cms.server import format_amount_of_time, format_time, format_datetime, format_datetime_smart, get_score_class, encode_for_url %}
+{% from cms.server import format_amount_of_time, format_time, format_datetime, format_datetime_smart, get_score_class, encode_for_url, get_best_submission, get_submission_score, get_task_max_score %}
 {% from cms.grading import COMPILATION_MESSAGES, EVALUATION_MESSAGES %}
-{% from cms.db import SubmissionResult %}
+{% from cms.db import Session, SubmissionResult %}
 {% from cmscommon.datetime import make_timestamp, utc %}
 {% from cmscommon.isocodes import translate_language_country_code %}
 <!DOCTYPE html>
@@ -165,6 +165,35 @@ $(document).ready(function () {
         {% for t_iter in contest.tasks %}
                             <li class="nav-header">
                                 {{ t_iter.name }}
+                                {% set session = Session() %}
+                                {% set best = get_best_submission(session, t_iter, current_user) %}
+                                {% set partial = int(get_submission_score(best)) %}
+                                {% set total = int(get_task_max_score(t_iter)) %}
+
+                                {% if best is not None %}
+                                    {% set result = best.get_result() %}
+                                    {% if result is not None and result.get_status() == SubmissionResult.COMPILATION_FAILED %}
+                                        {% set partial = 0 %}
+                                    {% end %}
+                                {% end %}
+
+                                {% if partial != -1 %}
+                                    <span class="score-label label pull-right {{ get_score_class(partial, total) }}"
+                                        data-score="{{partial}}"
+                                        data-max-score="{{total}}"
+                                        data-task-name="{{t_iter.name}}">
+                                        {{ partial }}
+                                        {% if total != -1 %}
+                                            / {{ total }}
+                                        {% end %}
+                                    </span>
+                                {% else %}
+                                    <span class="score-label label pull-right hidden"
+                                        data-score="-1"
+                                        data-max-score="{{total}}"
+                                        data-task-name="{{t_iter.name}}"
+                                    ></span>
+                                {% end %}
                             </li>
                             <li{% if request.path == '/tasks/%s/description' % encode_for_url(t_iter.name) %} class="active"{% end %}>
                                 <a href="{{ url_root }}/tasks/{{ encode_for_url(t_iter.name) }}/description">{{ _("Statement") }}</a>
