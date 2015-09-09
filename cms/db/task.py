@@ -222,6 +222,48 @@ class Task(Base):
     # submissions (list of Submission objects)
     # user_tests (list of UserTest objects)
 
+    def get_max_visible_score(self):
+        """Return the maximum score the contestant can get from the task. If
+        the task has some public testcases the return value is the max public
+        score.
+
+        return (float): the maximum score (or the maximum public score). -1
+        if not available
+
+        """
+
+        from cms.grading.scoretypes import get_score_type
+        score_type = get_score_type(dataset=self.active_dataset)
+        if score_type is None: return -1
+
+        if score_type.max_public_score != 0:
+            return round(score_type.max_public_score, self.score_precision)
+        if score_type.max_public_score != score_type.max_score:
+            if score_type.max_score != 0:
+                return round(score_type.max_score, self.score_precision)
+
+        return -1
+
+    def get_best_submission(self, participation):
+        """Find the submission of a user of a particular task that has the
+        maximiun public score
+
+        participation (participation): the user.
+
+        return (Submission): the submission with the maximum score, None if
+            there aren't submissions.
+
+        """
+
+        from . import Submission
+        submissions = self.sa_session.query(Submission)\
+            .filter(Submission.participation == participation)\
+            .filter(Submission.task == self)\
+            .all()
+
+        if len(submissions) == 0: return None
+        return max(submissions, key=lambda submission: submission.get_visible_score())
+
 
 class Statement(Base):
     """Class to store a translation of the task statement.

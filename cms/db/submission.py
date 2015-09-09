@@ -157,6 +157,35 @@ class Submission(Base):
         """
         return self.token is not None
 
+    def get_visible_score(self):
+        """Return the final score of a submission. If the task has some
+        public testcases, the score refers to these ones, otherwise the
+        total score is returned if the token was played.
+
+        return (float): the score of the submission. -1 if hidden or not
+            available
+
+        """
+
+        from cms.grading.scoretypes import get_score_type
+        score_type = get_score_type(dataset=self.task.active_dataset)
+        if score_type is None: return -1
+
+        result = self.get_result()
+        if result is None: return -1
+
+        # if the submission does not compile it's score is 0
+        if result.get_status() == SubmissionResult.COMPILATION_FAILED:
+            return 0
+
+        if score_type.max_public_score != 0 and result.public_score is not None:
+            return round(result.public_score, self.task.score_precision)
+
+        if score_type.max_public_score != score_type.max_score:
+            if self.tokened() and result.score is not None:
+                return round(result.score, self.task.score_precision)
+        return -1
+
 
 class File(Base):
     """Class to store information about one file submitted within a

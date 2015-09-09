@@ -49,7 +49,6 @@ from cms import config
 from cms.db import Contest, Participation, Session, User, SubmissionResult
 from cms.server import CommonRequestHandler, compute_actual_phase, \
     file_handler_gen, get_url_root, filter_language_codes, \
-    get_best_submission, get_submission_score, get_task_max_score, \
     get_score_string
 from cmscommon.datetime import get_timezone, make_datetime, make_timestamp
 from cmscommon.isocodes import translate_language_code, \
@@ -288,16 +287,12 @@ class BaseHandler(CommonRequestHandler):
             # is not interesting
             if not self.request.uri.startswith("/notifications"):
                 for task in self.contest.tasks:
-                    best = get_best_submission(self.sql_session, task, self.current_user)
-                    score = get_submission_score(best)
-                    # if the submission does not compile it's score is 0
-                    if best is not None:
-                        result = best.get_result()
-                        if result is not None and result.get_status() == SubmissionResult.COMPILATION_FAILED:
-                            score = 0
-                    max_score = get_task_max_score(task)
+                    best = task.get_best_submission(self.current_user)
+                    score = best.get_visible_score() if best is not None else -1
+                    max_score = task.get_max_visible_score()
+
                     ret["task_scores"][task.name] = {
-                        "as_string": get_score_string(task, score, max_score),
+                        "as_string": get_score_string(score, max_score, task.score_precision),
                         "score": score,
                         "max_score": max_score,
                         "precision": task.score_precision
