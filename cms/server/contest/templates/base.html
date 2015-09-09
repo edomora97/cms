@@ -165,33 +165,26 @@ $(document).ready(function () {
         {% for t_iter in contest.tasks %}
                             <li class="nav-header">
                                 {{ t_iter.name }}
-                                {% set session = Session() %}
-                                {% set best = get_best_submission(session, t_iter, current_user) %}
-                                {% set partial = int(get_submission_score(best)) %}
-                                {% set total = int(get_task_max_score(t_iter)) %}
-
-                                {% if best is not None %}
-                                    {% set result = best.get_result() %}
-                                    {% if result is not None and result.get_status() == SubmissionResult.COMPILATION_FAILED %}
-                                        {% set partial = 0 %}
-                                    {% end %}
-                                {% end %}
+                                {% set scores = task_scores[t_iter.name] %}
+                                {% set as_string = scores["as_string"] %}
+                                {% set partial = scores["score"] %}
+                                {% set total = scores["max_score"] %}
+                                {% set precision = scores["precision"] %}
 
                                 {% if partial != -1 %}
                                     <span class="score-label label pull-right {{ get_score_class(partial, total) }}"
                                         data-score="{{partial}}"
                                         data-max-score="{{total}}"
-                                        data-task-name="{{t_iter.name}}">
-                                        {{ partial }}
-                                        {% if total != -1 %}
-                                            / {{ total }}
-                                        {% end %}
+                                        data-task-name="{{t_iter.name}}"
+                                        data-precision="{{precision}}">
+                                        {{ as_string }}
                                     </span>
                                 {% else %}
                                     <span class="score-label label pull-right hidden"
                                         data-score="-1"
                                         data-max-score="{{total}}"
                                         data-task-name="{{t_iter.name}}"
+                                        data-precision="{{precision}}"
                                     ></span>
                                 {% end %}
                             </li>

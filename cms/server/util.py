@@ -332,81 +332,96 @@ def get_score_class(score, max_score):
         return "score_0_100"
 
 def get_submission_score(submission):
-	"""Return the final score of a submission. If the task has some
-	public testcases, the score refers to these ones, otherwise the
-	total score is returned if the token was played.
+    """Return the final score of a submission. If the task has some
+    public testcases, the score refers to these ones, otherwise the
+    total score is returned if the token was played.
 
-	submission (Submission): the submission.
+    submission (Submission): the submission.
 
-	return (float): the score of the submission. -1 if hidden or not
-		available
+    return (float): the score of the submission. -1 if hidden or not
+        available
 
-	"""
-	if submission is None:
-		return -1
+    """
+    if submission is None: return -1
 
-	task = submission.task
-	score_type = get_score_type(dataset=task.active_dataset)
-	if score_type is None:
-		return -1
+    task = submission.task
+    score_type = get_score_type(dataset=task.active_dataset)
+    if score_type is None: return -1
 
-	result = submission.get_result()
-	if result is None:
-		return -1
+    result = submission.get_result()
+    if result is None: return -1
 
-	if score_type.max_public_score != 0 and result.public_score is not None:
-		return round(result.public_score, task.score_precision)
+    if score_type.max_public_score != 0 and result.public_score is not None:
+        return round(result.public_score, task.score_precision)
 
-	if score_type.max_public_score != score_type.max_score:
-		if submission.token is not None and result.score is not None:
-			return round(result.score, task.score_precision)
-	return -1
+    if score_type.max_public_score != score_type.max_score:
+        if submission.token is not None and result.score is not None:
+            return round(result.score, task.score_precision)
+    return -1
 
 def get_task_max_score(task):
-	"""Return the maximum score the contestant can get from the task. If
-	the task has some public testcases the return value is the max public
-	score.
+    """Return the maximum score the contestant can get from the task. If
+    the task has some public testcases the return value is the max public
+    score.
 
-	task (Task): the task
+    task (Task): the task
 
-	return (float): the maximum score (or the maximum public score). -1
-	if not available
+    return (float): the maximum score (or the maximum public score). -1
+    if not available
 
-	"""
-	score_type = get_score_type(dataset=task.active_dataset)
+    """
+    score_type = get_score_type(dataset=task.active_dataset)
 
-	if score_type is None:
-		return -1
+    if score_type is None: return -1
 
-	if score_type.max_public_score != 0:
-		return round(score_type.max_public_score, task.score_precision)
-	if score_type.max_public_score != score_type.max_score:
-		if score_type.max_score != 0:
-			return round(score_type.max_score, task.score_precision)
+    if score_type.max_public_score != 0:
+        return round(score_type.max_public_score, task.score_precision)
+    if score_type.max_public_score != score_type.max_score:
+        if score_type.max_score != 0:
+            return round(score_type.max_score, task.score_precision)
 
-	return -1
+    return -1
 
 def get_best_submission(session, task, participation):
-	"""Find the submission of a user of a particular task that has the
-	maximiun public score
+    """Find the submission of a user of a particular task that has the
+    maximiun public score
 
-	session (Session): a Session.
-	task (Task): the task.
-	participation (participation): the user.
+    session (Session): a Session.
+    task (Task): the task.
+    participation (participation): the user.
 
-	return (Submission): the submission with the maximum score, None if
-		there aren't submissions.
+    return (Submission): the submission with the maximum score, None if
+        there aren't submissions.
 
-	"""
+    """
 
-	submissions = session.query(Submission)\
-		.filter(Submission.participation == participation)\
-		.filter(Submission.task == task)\
-		.all()
+    submissions = session.query(Submission)\
+        .filter(Submission.participation == participation)\
+        .filter(Submission.task == task)\
+        .all()
 
-	if len(submissions) == 0:
-		return None
-	return sorted(submissions, key=lambda submission: get_submission_score(submission), reverse=True)[0]
+    if len(submissions) == 0: return None
+    return max(submissions, key=lambda submission: get_submission_score(submission))
+
+def get_score_string(task, score, max_score):
+    """Return a string like "score / max_score", rounding the precision
+    and taking care of all particular cases
+
+    task (Task): the task from with take the score precision
+    score (float): the user score
+    max_score (float): the maximum score of the task
+
+    return (unicode): a string like "score / max_score" or an empty string
+        if not available
+
+    """
+
+    if score == -1:
+        return ""
+    if max_score != -1:
+        return "%g / %g" % (round(score, task.score_precision), round(max_score, task.score_precision))
+    else:
+        return "%g" % (round(score, task.score_precision))
 
 # Dummy function to mark strings for translation
 def N_(*unused_args, **unused_kwargs):

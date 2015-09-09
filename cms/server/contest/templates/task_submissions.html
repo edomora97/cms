@@ -28,6 +28,8 @@ $(document).on("click", "#submission_list tbody tr td.status .details", function
 });
 
 function get_score_class (score, max_score) {
+    score = parseFloat(score);
+    max_score = parseFloat(max_score);
     if (score <= 0) {
         return "score_0";
     } else if (score >= max_score) {
@@ -37,13 +39,17 @@ function get_score_class (score, max_score) {
     }
 }
 
-update_label = function(label, score, max_score) {
-    label.attr("data-score", score);
+round_float = function(float, precision) {
+    var exp = Math.pow(10, precision);
+    return Math.round(float*exp) / exp;
+}
 
+update_label = function(label, score, max_score, precision) {
+    label.attr("data-score", score);
     if (max_score != undefined)
-        label.text(score + " / " + max_score);
+        label.text(round_float(score, precision) + " / " + round_float(max_score, precision));
     else
-        label.text(score);
+        label.text(round_float(score, precision));
 
     label.removeClass("score_0").removeClass("score_0_100").removeClass("score_100");
     label.addClass(get_score_class(score, max_score));
@@ -67,6 +73,7 @@ update_submission_row = function (submission_id, data) {
 
     var pre_score = label.attr('data-score');
     var max_score = label.attr('data-max-score');
+    var precision = label.attr('data-precision');
 
     if (data["status"] == {{ SubmissionResult.SCORED }}) {
 
@@ -75,7 +82,7 @@ update_submission_row = function (submission_id, data) {
         if (data["score"] != undefined) {
             var score = data["score"];
             if (data["max_score"] != undefined) {
-                row.children("td.total_score").addClass(get_score_class(parseFloat(data["score"]), parseFloat(data["max_score"])));
+                row.children("td.total_score").addClass(get_score_class(round_float(data["score"], precision), round_float(data["max_score"], precision)));
                 score += " / " + data["max_score"];
                 cur_score = data["score"];
             }
@@ -84,7 +91,7 @@ update_submission_row = function (submission_id, data) {
         if (data["public_score"] != undefined) {
             var public_score = data["public_score"];
             if (data["max_public_score"] != undefined) {
-                row.children("td.public_score").addClass(get_score_class(parseFloat(data["public_score"]), parseFloat(data["max_public_score"])));
+                row.children("td.public_score").addClass(get_score_class(round_float(data["public_score"], precision), round_float(data["max_public_score"], precision)));
                 public_score += " / " + data["max_public_score"];
                 cur_score = data["public_score"];
             }
@@ -92,11 +99,11 @@ update_submission_row = function (submission_id, data) {
         }
 
         if (+cur_score > +pre_score)
-            update_label(label, cur_score, max_score);
+            update_label(label, cur_score, max_score, precision);
 
     } else if (data["status"] == {{ SubmissionResult.COMPILATION_FAILED }}) {
         if (pre_score < 0)
-            update_label(label, 0, max_score);
+            update_label(label, 0, max_score, precision);
     }
 }
 

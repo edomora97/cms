@@ -46,9 +46,11 @@ from werkzeug.datastructures import LanguageAccept
 from werkzeug.http import parse_accept_header
 
 from cms import config
-from cms.db import Contest, Participation, Session, User
+from cms.db import Contest, Participation, Session, User, SubmissionResult
 from cms.server import CommonRequestHandler, compute_actual_phase, \
-    file_handler_gen, get_url_root, filter_language_codes
+    file_handler_gen, get_url_root, filter_language_codes, \
+    get_best_submission, get_submission_score, get_task_max_score, \
+    get_score_string
 from cmscommon.datetime import get_timezone, make_datetime, make_timestamp
 from cmscommon.isocodes import translate_language_code, \
     translate_language_country_code
@@ -279,6 +281,27 @@ class BaseHandler(CommonRequestHandler):
 
             # set the timezone used to format timestamps
             ret["timezone"] = get_timezone(participation.user, self.contest)
+
+            # compute the scores for the navigation bar
+            ret["task_scores"] = {}
+            # optimization: do not process the tasks if the request
+            # is not interesting
+            if not self.request.uri.startswith("/notifications"):
+                for task in self.contest.tasks:
+                    best = get_best_submission(self.sql_session, task, self.current_user)
+                    score = get_submission_score(best)
+                    # if the submission does not compile it's score is 0
+                    if best is not None:
+                        result = best.get_result()
+                        if result is not None and result.get_status() == SubmissionResult.COMPILATION_FAILED:
+                            score = 0
+                    max_score = get_task_max_score(task)
+                    ret["task_scores"][task.name] = {
+                        "as_string": get_score_string(task, score, max_score),
+                        "score": score,
+                        "max_score": max_score,
+                        "precision": task.score_precision
+                    }
 
         # some information about token configuration
         ret["tokens_contest"] = self._get_token_status(self.contest)
