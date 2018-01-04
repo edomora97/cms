@@ -440,8 +440,9 @@ msgstr "Không mở được file nén đã nộp."
 msgid "Cannot recognize the submission language."
 msgstr "Không nhận diện được ngôn ngữ sử dụng trong bài nộp."
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "Ngôn ngữ %s không được sử dụng trong kì thi này."
 
 msgid "Invalid submission!"

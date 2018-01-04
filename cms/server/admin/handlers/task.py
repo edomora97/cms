@@ -9,6 +9,7 @@
 # Copyright © 2014 Artem Iglikov <artem.iglikov@gmail.com>
 # Copyright © 2014 Fabian Gundlach <320pointsguy@gmail.com>
 # Copyright © 2016 Myungwoo Chun <mc.tamaki@gmail.com>
+# Copyright © 2018 Edoardo Morassutto <edoardo.morassutto@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -39,6 +40,7 @@ import tornado.web
 
 from cms.db import Attachment, Dataset, Session, Statement, Submission, \
     SubmissionFormatElement, Task
+from cms.server.util import task_allowed_languages
 from cmscommon.datetime import make_datetime
 
 from .base import BaseHandler, SimpleHandler, require_permission
@@ -124,7 +126,10 @@ class TaskHandler(BaseHandler):
             self.sql_session.query(Submission)\
                 .join(Task).filter(Task.id == task_id)\
                 .order_by(Submission.timestamp.desc()).all()
-        self.render("task.html", **self.r_params)
+        self.render("task.html",
+                    allowed_languages=
+                        task_allowed_languages(task, self.contest),
+                    **self.r_params)
 
     @require_permission(BaseHandler.PERMISSION_ALL)
     def post(self, task_id):
@@ -168,6 +173,13 @@ class TaskHandler(BaseHandler):
             self.get_int(attrs, "score_precision")
 
             self.get_string(attrs, "score_mode")
+
+            custom_languages = self.get_argument("custom_languages",
+                                                 default=False)
+            if custom_languages:
+                attrs["languages"] = self.get_arguments("languages")
+            else:
+                attrs["languages"] = None
 
             # Update the task.
             task.set_attrs(attrs)

@@ -4,6 +4,7 @@
 # Contest Management System - http://cms-dev.github.io/
 # Copyright © 2013 Stefano Maggiolo <s.maggiolo@gmail.com>
 # Copyright © 2014 Luca Wehrstedt <luca.wehrstedt@gmail.com>
+# Copyright © 2018 Edoardo Morassutto <edoardo.morassutto@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -106,6 +107,8 @@ class RepeatedUnicode(TypeDecorator):
             only by whitespace.
 
         """
+        if value is None:
+            return None
         # This limitation may be removed if necessary.
         if any("," in val for val in value):
             raise ValueError("Comma cannot be encoded.")
@@ -121,5 +124,7 @@ class RepeatedUnicode(TypeDecorator):
         return ([unicode]): the decoded list.
 
         """
+        if value is None:
+            return None
         return list(val.strip() for val in value.split(",")
                     if len(val) > 0 and not val.isspace())

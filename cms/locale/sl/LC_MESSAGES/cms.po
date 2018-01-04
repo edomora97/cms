@@ -389,7 +389,7 @@ msgid "All sources must be in the same language."
 msgstr "Vsa izvorna koda mora biti v istem jeziku."
 
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "%s ni dovoljen."
 
 msgid "Invalid submission!"

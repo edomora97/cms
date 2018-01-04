@@ -11,6 +11,7 @@
 # Copyright © 2014 Fabian Gundlach <320pointsguy@gmail.com>
 # Copyright © 2015-2016 William Di Luigi <williamdiluigi@gmail.com>
 # Copyright © 2016 Myungwoo Chun <mc.tamaki@gmail.com>
+# Copyright © 2018 Edoardo Morassutto <edoardo.morassutto@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -49,6 +50,7 @@ from cms.grading.languagemanager import get_language
 from cms.grading.tasktypes import get_task_type
 from cms.server import actual_phase_required, format_size, multi_contest
 from cms.locale import locale_format
+from cms.server.util import task_allowed_languages
 from cmscommon.archive import Archive
 from cmscommon.crypto import encrypt_number
 from cmscommon.datetime import make_timestamp
@@ -326,9 +328,10 @@ class UserTestHandler(ContestHandler):
         # it or it is not allowed / recognized.
         if need_lang:
             error = None
+            allowed_languages = task_allowed_languages(task, contest)
             if submission_lang is None:
                 error = self._("Cannot recognize the user test language.")
-            elif submission_lang not in contest.languages:
+            elif submission_lang not in allowed_languages:
                 error = self._("Language %s not allowed in this contest.") \
                     % submission_lang
         if error is not None:

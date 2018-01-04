@@ -441,8 +441,9 @@ msgstr ""
 "提出されたファイルがどのプログラミング言語で書かれているか判定することができ"
 "ません。"
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "プログラミング言語 %s はこのコンテストでは使用できません。"
 
 msgid "Invalid submission!"

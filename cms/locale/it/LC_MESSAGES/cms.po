@@ -434,8 +434,8 @@ msgid "Cannot recognize the submission language."
 msgstr "Impossibile riconoscere il linguaggio della sottoposizione."
 
 #, python-format
-msgid "Language %s not allowed in this contest."
-msgstr "Il linguaggio %s non è consentito in questa gara."
+msgid "Language %s not allowed in this task."
+msgstr "Il linguaggio %s non è consentito in questo problema."
 
 msgid "Invalid submission!"
 msgstr "Sottoposizione invalida!"

@@ -12,6 +12,7 @@
 # Copyright © 2015-2016 William Di Luigi <williamdiluigi@gmail.com>
 # Copyright © 2016 Myungwoo Chun <mc.tamaki@gmail.com>
 # Copyright © 2016 Amir Keivan Mohtashami <akmohtashami97@gmail.com>
+# Copyright © 2018 Edoardo Morassutto <edoardo.morassutto@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -51,6 +52,7 @@ from cms.grading.languagemanager import get_language
 from cms.grading.scoretypes import get_score_type
 from cms.grading.tasktypes import get_task_type
 from cms.server import actual_phase_required, multi_contest
+from cms.server.util import task_allowed_languages
 from cmscommon.archive import Archive
 from cmscommon.crypto import encrypt_number
 from cmscommon.datetime import make_timestamp
@@ -259,10 +261,11 @@ class SubmitHandler(ContestHandler):
         # it or it is not allowed / recognized.
         if need_lang:
             error = None
+            allowed_languages = task_allowed_languages(task, contest)
             if submission_lang is None:
                 error = self._("Cannot recognize the submission language.")
-            elif submission_lang not in contest.languages:
-                error = self._("Language %s not allowed in this contest.") \
+            elif submission_lang not in allowed_languages:
+                error = self._("Language %s not allowed in this task.") \
                     % submission_lang
             if error is not None:
                 self._send_error(self._("Invalid submission!"), error)
@@ -409,6 +412,8 @@ class TaskSubmissionsHandler(ContestHandler):
                     submissions_left=submissions_left,
                     submissions_download_allowed=
                         self.contest.submissions_download_allowed,
+                    allowed_languages=
+                        task_allowed_languages(task, self.contest),
                     **self.r_params)
 
 

@@ -10,6 +10,7 @@
 # Copyright © 2016 Myungwoo Chun <mc.tamaki@gmail.com>
 # Copyright © 2016 Masaki Hara <ackie.h.gmai@gmail.com>
 # Copyright © 2016 Amir Keivan Mohtashami <akmohtashami97@gmail.com>
+# Copyright © 2018 Edoardo Morassutto <edoardo.morassutto@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -86,7 +87,7 @@ __all__ = [
 
 # Instantiate or import these objects.
 
-version = 28
+version = 29
 
 engine = create_engine(config.database, echo=config.database_debug,
                        pool_timeout=60, pool_recycle=120)

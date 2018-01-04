@@ -59,6 +59,7 @@ $(document).ready(function () {
 {% block core %}
 
 {% from cms.grading.tasktypes import get_task_type %}
+{% from cms.server.util import task_allowed_languages %}
 
 {% if actual_phase == 0 or current_user.unrestricted %}
 
@@ -118,7 +119,7 @@ $(document).ready(function () {
                 <div class="control-group">
                     <div class="controls">
                         <select id="language" name="language">
-{% for lang in contest.languages %}
+{% for lang in task_allowed_languages(task, contest) %}
                             <option value="{{ lang }}">{{ lang }}</option>
 {% end %}
                         <select>

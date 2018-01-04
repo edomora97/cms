@@ -229,8 +229,9 @@ msgstr "Непознат език на решението."
 msgid "All sources must be in the same language."
 msgstr "Всички кодове трябва да бъдат на един и същи език."
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "Езикът %s не се допуска в това състезание."
 
 msgid "Invalid submission!"

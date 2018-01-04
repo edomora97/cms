@@ -445,8 +445,9 @@ msgstr "제출된 문서가 열리지 않습니다."
 msgid "Cannot recognize the submission language."
 msgstr "제출 언어를 확인할 수 없습니다."
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "%s 언어는 이 콘테스트에서 사용할 수 없습니다."
 
 msgid "Invalid submission!"

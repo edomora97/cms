@@ -397,7 +397,7 @@ msgid "Cannot recognize the submission language."
 msgstr ""
 
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr ""
 
 msgid "Invalid submission!"

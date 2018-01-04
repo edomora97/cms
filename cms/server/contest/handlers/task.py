@@ -11,6 +11,7 @@
 # Copyright © 2014 Fabian Gundlach <320pointsguy@gmail.com>
 # Copyright © 2015-2016 William Di Luigi <williamdiluigi@gmail.com>
 # Copyright © 2016 Amir Keivan Mohtashami <akmohtashami97@gmail.com>
+# Copyright © 2018 Edoardo Morassutto <edoardo.morassutto@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -39,6 +40,7 @@ import logging
 import tornado.web
 
 from cms.server import actual_phase_required, multi_contest
+from cms.server.util import task_allowed_languages
 from cmscommon.isocodes import is_language_code, translate_language_code, \
     is_country_code, translate_country_code, \
     is_language_country_code, translate_language_country_code
@@ -93,7 +95,11 @@ class TaskDescriptionHandler(ContestHandler):
             logger.error("Preferred languages for user %s is invalid [%r].",
                          self.current_user.user.username, e)
 
-        self.render("task_description.html", task=task, **self.r_params)
+        self.render("task_description.html",
+                    task=task,
+                    allowed_languages=
+                        task_allowed_languages(task, self.contest),
+                    **self.r_params)
 
 
 class TaskStatementViewHandler(FileHandler):

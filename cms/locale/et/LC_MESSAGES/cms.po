@@ -420,8 +420,9 @@ msgstr "Esitatud arhiivi ei õnnestu avada."
 msgid "Cannot recognize the submission language."
 msgstr "Lahenduse programmeerimiskeel on tundmatu."
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "Programmeerimiskeele %s kasutamine ei ole sellel võistlusel lubatud."
 
 msgid "Invalid submission!"

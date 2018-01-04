@@ -7,6 +7,7 @@
 # Copyright © 2010-2012 Matteo Boscariol <boscarim@hotmail.com>
 # Copyright © 2012-2014 Luca Wehrstedt <luca.wehrstedt@gmail.com>
 # Copyright © 2013 Bernard Blackham <bernard@largestprime.net>
+# Copyright © 2018 Edoardo Morassutto <edoardo.morassutto@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -39,6 +40,7 @@ from sqlalchemy.orm import backref, relationship
 from sqlalchemy.orm.collections import attribute_mapped_collection
 from sqlalchemy.ext.orderinglist import ordering_list
 
+from cms.db import RepeatedUnicode
 from . import Base, Contest, CodenameConstraint, FilenameConstraint, \
     DigestConstraint
 from cms import SCORE_MODE_MAX, SCORE_MODE_MAX_TOKENED_LAST
@@ -201,6 +203,12 @@ class Task(Base):
              name="score_mode"),
         nullable=False,
         default=SCORE_MODE_MAX_TOKENED_LAST)
+
+    # The list of names of languages allowed in this task; if null the global
+    # contest configuration is used
+    languages = Column(
+        RepeatedUnicode(),
+        nullable=True)
 
     # Active Dataset (id and object) currently being used for scoring.
     # The ForeignKeyConstraint for this column is set at table-level.

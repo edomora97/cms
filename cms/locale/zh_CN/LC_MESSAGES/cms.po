@@ -424,8 +424,9 @@ msgstr "封装文件无法正常开启"
 msgid "Cannot recognize the submission language."
 msgstr "无法识别本次传送所使用的程序语言"
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "本次竞赛不支持语言 %s"
 
 msgid "Invalid submission!"

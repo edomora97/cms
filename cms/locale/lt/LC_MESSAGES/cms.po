@@ -438,8 +438,9 @@ msgstr "Nepavyksta atverti pateikto archyvo."
 msgid "Cannot recognize the submission language."
 msgstr "Nepavyksta atpažinti pateikto sprendimo kalbos."
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "Kalba %s nėra leidžiama šiose varžybose."
 
 msgid "Invalid submission!"

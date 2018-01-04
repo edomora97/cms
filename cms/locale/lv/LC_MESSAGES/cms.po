@@ -446,8 +446,9 @@ msgstr "Iesūtīto arhīvu nav iespējams atvērt."
 msgid "Cannot recognize the submission language."
 msgstr "Nav iespējams atpazīt iesūtījuma valodu."
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "Šajās sacensībās nav atļauts izmantot valodu %s."
 
 msgid "Invalid submission!"

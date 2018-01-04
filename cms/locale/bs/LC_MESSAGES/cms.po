@@ -144,8 +144,9 @@ msgstr "Ne mogu prepoznati jezik prijave."
 msgid "All sources must be in the same language."
 msgstr "Sve izvorne datoteke moraju biti u istom jeziku."
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "Jezik %s nije dozvoljen na ovom takmičenju."
 
 msgid "Invalid submission!"

@@ -461,8 +461,8 @@ msgid "Cannot recognize the submission language."
 msgstr "Impossible de reconnaître le langage du fichier soumis."
 
 #, python-format
-msgid "Language %s not allowed in this contest."
-msgstr "Le langage ‘%s’ n’est pas autorisé dans ce concours."
+msgid "Language %s not allowed in this task."
+msgstr "Le langage ‘%s’ n’est pas autorisé dans ce tâche."
 
 msgid "Invalid submission!"
 msgstr "Soumission invalide !"

@@ -151,8 +151,9 @@ msgstr "無法辨識本次傳送所使用的程式語言"
 msgid "All sources must be in the same language."
 msgstr "所有程式碼需使用相同的程式語言"
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr ""
 
 msgid "Invalid submission!"

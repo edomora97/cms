@@ -9,6 +9,7 @@
 # Copyright © 2016 Myungwoo Chun <mc.tamaki@gmail.com>
 # Copyright © 2016 William Di Luigi <williamdiluigi@gmail.com>
 # Copyright © 2016 Amir Keivan Mohtashami <akmohtashami97@gmail.com>
+# Copyright © 2018 Edoardo Morassutto <edoardo.morassutto@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -737,6 +738,15 @@ def create_url_builder(url_root):
             url += "?" + urlencode(kwargs)
         return url
     return result
+
+
+def task_allowed_languages(task, contest):
+    if task.languages is not None:
+        return task.languages
+    elif contest is not None:
+        return contest.languages
+    else:
+        return []  # a task may not be bound to any contest
 
 
 class CommonRequestHandler(RequestHandler):

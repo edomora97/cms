@@ -457,8 +457,9 @@ msgstr "Het ingediende archief kon niet worden geopend."
 msgid "Cannot recognize the submission language."
 msgstr "De taal van de inzending kan niet worden herkend."
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "De programmeertaal %s is niet toegelaten in deze wedstrijd."
 
 msgid "Invalid submission!"

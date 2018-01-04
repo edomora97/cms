@@ -2,6 +2,7 @@
 {% block core %}
 
 {% from cms.server import format_token_rules, format_datetime_smart %}
+{% from cms.server.util import task_allowed_languages %}
 {% from cms.grading.tasktypes import get_task_type %}
 {% from cms.locale import locale_format %}
 
@@ -191,8 +192,8 @@
         </tr>
     </thead>
     <tbody>
-{% set extensions = "[%s]" %  ("|".join(set(get_language(lang).source_extension for lang in contest.languages))) %}
 {% for t_iter in contest.tasks %}
+    {% set extensions = "[%s]" %  ("|".join(sorted(set(get_language(lang).source_extension for lang in task_allowed_languages(t_iter, contest))))) %}
         <tr>
             <th>{{ t_iter.name }}</th>
             <td>{{ t_iter.title }}</td>

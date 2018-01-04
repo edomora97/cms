@@ -432,8 +432,9 @@ msgstr "Отправленый архив не открывается."
 msgid "Cannot recognize the submission language."
 msgstr "Невозможно определить язык отправки."
 
+# TODO this message has been changed, from contest to task
 #, python-format
-msgid "Language %s not allowed in this contest."
+msgid "Language %s not allowed in this task."
 msgstr "Язык %s не разрешен на этом соревновании."
 
 msgid "Invalid submission!"
