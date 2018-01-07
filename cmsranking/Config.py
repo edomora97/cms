@@ -21,16 +21,16 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import io
 import errno
-import json
+import io
 import logging
 import os
-import pkg_resources
 import sys
 
-from cmsranking.Logger import add_file_handler
+import pkg_resources
+import yaml
 
+from cmsranking.Logger import add_file_handler
 
 logger = logging.getLogger(__name__)
 
@@ -160,7 +160,7 @@ class Config(object):
     def _load_one(self, conf_fobj):
         """Populate config parameters from the given file.
 
-        Parse it as JSON and store in self all configuration properties
+        Parse it as YAML and store in self all configuration properties
         it defines. Log critical message and return False if anything
         goes wrong or seems odd.
 
@@ -170,9 +170,9 @@ class Config(object):
         """
         # Parse config file.
         try:
-            data = json.load(conf_fobj)
+            data = yaml.load(conf_fobj)
         except ValueError:
-            logger.critical("Config file is invalid JSON.")
+            logger.critical("Config file is invalid YAML.")
             return False
 
         # Store every config property.

@@ -28,14 +28,14 @@ from __future__ import unicode_literals
 
 import errno
 import io
-import json
 import logging
 import os
 import sys
 
+import yaml
+
 from .log import set_detailed_logs
 from .util import ServiceCoord, Address, async_config
-
 
 logger = logging.getLogger(__name__)
 
@@ -181,7 +181,7 @@ class Config(object):
 
     def _load_unique(self, path):
         """Populate the Config class with everything that sits inside
-        the JSON file path (usually something like /etc/cms.conf). The
+        the config file path (usually something like /etc/cms.conf). The
         only pieces of data treated differently are the elements of
         core_services and other_services that are sent to async
         config.
@@ -189,13 +189,13 @@ class Config(object):
         Services whose name begins with an underscore are ignored, so
         they can be commented out in the configuration file.
 
-        path (string): the path of the JSON config file.
+        path (string): the path of the config file.
 
         """
         # Load config file.
         try:
             with io.open(path, 'rt', encoding='utf-8') as f:
-                data = json.load(f)
+                data = yaml.load(f)
         except IOError as error:
             if error.errno == errno.ENOENT:
                 logger.debug("Couldn't find config file %s.", path)
