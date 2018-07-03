@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 
 {% block core %}
-<div class="core_title">
-  <h1><a href="{{ url("task", task.id) }}">{{ task.title }} ({{ task.name }})</a> - Rename dataset</h1>
-</div>
+<h1 class="display-4">Rename dataset</h1>
+
+<h2><a href="{{ url("task", task.id) }}">{{ task.title }} ({{ task.name }})</a></h2>
 
 <form action="{{ url("dataset", dataset.id, "rename") }}" method="POST">
   {{ xsrf_form_html|safe }}
-  <table>
-    <tr>
-      <td>Edit description (each dataset must have a unique description):</td>
-      <td>
-        <input type="text" name="description" value="{{ dataset.description }}"/>
-      </td>
-    </tr>
-  </table>
-  <input type="submit" value="Rename">
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      Edit description (each dataset must have a unique description):
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="description" value="{{ dataset.description }}"/>
+    </div>
+  </div>
+
+  <input class="btn btn-success" type="submit" value="Rename">
 </form>
 {% endblock core %}

@@ -1,23 +1,23 @@
 {# This snippet shows a table using the list submissions as input #}
-{% if submission_count == 0 %}
-<p>No submissions found.</p>
 
+{% if submission_count == 0 %}
+  <p>No submissions found.</p>
 {% else %}
 
 {% if submission_count > submissions|length %}
-<div>
-  Pages:
-  {% for i in range(submission_pages) %}
-    {% if i != submission_page %}
-  <a href="{{ page_url(page=i) }}">{{ i + 1 }}</a>
-    {% else %}
-  {{ i + 1 }}
-    {% endif %}
-  {% endfor %}
-</div>
+  <div>
+    Pages:
+    {% for i in range(submission_pages) %}
+      {% if i != submission_page %}
+        <a class="btn btn-sm btn-light mr-1" href="{{ page_url(page=i) }}">{{ i + 1 }}</a>
+      {% else %}
+        <a class="btn btn-sm btn-light mr-1 disabled" href="#">{{ i + 1 }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
 {% endif %}
 
-<table class="bordered">
+<table class="table table-sm">
   <thead>
     <tr>
       <th>Time</th>

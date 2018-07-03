@@ -237,7 +237,7 @@ class ScoreTypeGroup(ScoreTypeAlone):
     {% endif %}
     </div>
     <div class="subtask-body">
-        <table class="testcase-list">
+        <table class="testcase-list table table-sm">
             <thead>
                 <tr>
                     <th class="idx">

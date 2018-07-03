@@ -127,6 +127,7 @@ class ParameterTypeString(ParameterType):
 
     TEMPLATE = GLOBAL_ENVIRONMENT.from_string("""
 <input type="text"
+       class="form-control"
        name="{{ prefix ~ parameter.short_name }}"
        value="{{ previous_value }}" />
 """)
@@ -145,6 +146,7 @@ class ParameterTypeInt(ParameterType):
 
     TEMPLATE = GLOBAL_ENVIRONMENT.from_string("""
 <input type="text"
+       class="form-control"
        name="{{ prefix ~ parameter.short_name }}"
        value="{{ previous_value }}" />
 """)
@@ -161,7 +163,7 @@ class ParameterTypeChoice(ParameterType):
     """Type for a parameter giving a choice among a finite number of items."""
 
     TEMPLATE = GLOBAL_ENVIRONMENT.from_string("""
-<select name="{{ prefix ~ parameter.short_name }}">
+<select name="{{ prefix ~ parameter.short_name }}" class="form-control">
 {% for choice_value, choice_description in iteritems(parameter.values) %}
   <option value="{{ choice_value }}"
           {% if choice_value == previous_value %}selected{% endif %}>
@@ -198,14 +200,14 @@ class ParameterTypeCollection(ParameterType):
     """Type of a parameter containing a tuple of sub-parameters."""
 
     TEMPLATE = GLOBAL_ENVIRONMENT.from_string("""
-<table>
+<table class="table table-sm table-borderless">
 {% for subp in parameter.subparameters %}
   {% set subp_prefix = "%s%s_%d_"|format(prefix, parameter.short_name,
                                          loop.index0) %}
   {% set subp_previous_value = (previous_value[loop.index0]
                                 if previous_value is not none else none) %}
   <tr>
-    <td>{{ subp.name }}</td>
+    <td class="col-form-label">{{ subp.name }}</td>
     <td>{{ subp.render(subp_prefix, subp_previous_value) }}</td>
   </tr>
 {% endfor %}

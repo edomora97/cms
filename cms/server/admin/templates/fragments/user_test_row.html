@@ -19,31 +19,31 @@
   <td><a href="{{ url("task", ut.task.id) }}">{{ ut.task.name }}</a></td>
   <td>
     {% if status == UserTestResult.COMPILING %}
-    Compiling...
+      Compiling...
     {% else %}
-    <div id="title_evaluation_{{ ut.id }}" class="toggling_off">
+      <div id="title_evaluation_{{ ut.id }}" class="toggling_off">
 
-      {% if status == UserTestResult.COMPILATION_FAILED %}
-      Compilation failed
-      <div id="evaluation_{{ ut.id }}" style="display: none;">
+        {% if status == UserTestResult.COMPILATION_FAILED %}
+          Compilation failed
+          <div id="evaluation_{{ ut.id }}" style="display: none;">
 
-      {% elif status == UserTestResult.EVALUATING %}
-      Evaluating...
-      <div id="evaluation_{{ ut.id }}" style="display: none;">
+        {% elif status == UserTestResult.EVALUATING %}
+          Evaluating...
+          <div id="evaluation_{{ ut.id }}" style="display: none;">
 
-      {% elif status == UserTestResult.EVALUATED %}
-      Evaluated
-      <div id="evaluation_{{ ut.id }}" style="display: none;">
+        {% elif status == UserTestResult.EVALUATED %}
+          Evaluated
+          <div id="evaluation_{{ ut.id }}" style="display: none;">
 
-      {% else %}
-      [Unknown status]
-      <div id="evaluation_{{ ut.id }}" style="display: none;">
+        {% else %}
+          [Unknown status]
+          <div id="evaluation_{{ ut.id }}" style="display: none;">
 
-      {% endif %}
-        <h3>Compilation output</h3>{# TODO: trim long outputs and add facility to see raw #}
-        <pre>{% if utr.compilation_text|length > 0 %}{{ utr.compilation_text|format_status_text }}{% endif %}</pre>
+        {% endif %}
+          <h3>Compilation output</h3>{# TODO: trim long outputs and add facility to see raw #}
+          <pre>{% if utr.compilation_text|length > 0 %}{{ utr.compilation_text|format_status_text }}{% endif %}</pre>
+        </div>
       </div>
-    </div>
 
     {% endif %}
   </td>

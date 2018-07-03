@@ -7,122 +7,122 @@
 {% if sr is not none %}
   {% set status = sr.get_status() %}
 {% endif %}
-<div class="core_title">
-  <h1>Submission {{ s.id }} (Task: <a href="{{ url("task", s.task.id) }}">{{ s.task.name }}</a>)</h1>
-</div>
+
+<h1 class="display-4">Submission {{ s.id }} <small>(Task: <a href="{{ url("task", s.task.id) }}">{{ s.task.name }}</a>)</small></h1>
 
 {% set dataset_selector_par_url = url("submission", s.id) %}
 {% include "fragments/dataset_selector.html" %}
 
-<h2 id="title_details" class="toggling_on">Submission details</h2>
-<div id="details">
+<h2>Submission details</h2>
 
-  <table class="bordered">
-    <thead>
-      <tr>
-        <th>Property</th>
-        <th>Value</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Submission time</td>
-        <td>{{ s.timestamp }}</td>
-      </tr>
-      <tr>
-        <td>Id</td>
-        <td>{{ s.id }}</td>
-      </tr>
-      <tr>
-        <td>Task</td>
-        <td><a href="{{ url("task", s.task.id) }}">{{ s.task.name }}</a></td>
-      </tr>
-      <tr>
-        <td>User</td>
-        <td><a href="{{ url("contest", s.participation.contest.id, "user", s.participation.user.id, "edit") }}">{{ s.participation.user.username }}</a></td>
-      </tr>
-      <tr>
-        <td>Files</td>
-        <td>
-          {% for filename in s.task.submission_format %}
-            {% if filename in s.files %}
-              {% set real_filename = filename if s.language is none else filename|replace(".%l", (s.language|to_language).source_extension) %}
-          <a href="javascript:void(0);" onclick="utils.show_file('{{ real_filename }}','{{ url("submission_file", s.files[filename].id) }}')">
-            {{ real_filename }}
-          </a>
-          <br/>
-            {% endif %}
-          {% endfor %}
-        </td>
-      </tr>
-      <tr>
-        <td>Language</td>
-        <td>
-          {% if s.language is none %}
-          N/A
-          {% else %}
-          {{ s.language }}
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Submission time</td>
+      <td>{{ s.timestamp }}</td>
+    </tr>
+    <tr>
+      <td>Id</td>
+      <td>{{ s.id }}</td>
+    </tr>
+    <tr>
+      <td>Task</td>
+      <td><a href="{{ url("task", s.task.id) }}">{{ s.task.name }}</a></td>
+    </tr>
+    <tr>
+      <td>User</td>
+      <td><a href="{{ url("contest", s.participation.contest.id, "user", s.participation.user.id, "edit") }}">{{ s.participation.user.username }}</a></td>
+    </tr>
+    <tr>
+      <td>Files</td>
+      <td>
+        {% for filename in s.task.submission_format %}
+          {% if filename in s.files %}
+            {% set real_filename = filename if s.language is none else filename|replace(".%l", (s.language|to_language).source_extension) %}
+            <a href="javascript:void(0);" onclick="utils.show_file('{{ real_filename }}','{{ url("submission_file", s.files[filename].id) }}')">
+              {{ real_filename }}
+            </a>
+            <br/>
           {% endif %}
-      </tr>
-      <tr>
-        <td>Token</td>
-        <td>
-          {% if s.token is none %}
-          No
+        {% endfor %}
+      </td>
+    </tr>
+    <tr>
+      <td>Language</td>
+      <td>
+        {% if s.language is none %}
+        N/A
+        {% else %}
+        {{ s.language }}
+        {% endif %}
+    </tr>
+    <tr>
+      <td>Token</td>
+      <td>
+        {% if s.token is none %}
+        No
+        {% else %}
+        Yes
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td class="align-middle">Official</td>
+      <td>
+          <form action="{{ url("submission", s.id, shown_dataset.id, "official") }}" name="official_status_form" method="POST">
+          {{ xsrf_form_html|safe }}
+          {% if s.official %}
+            <input type="hidden" name="official" value="no"/>
+            Yes
+            <input
+              class="btn btn-outline-primary btn-sm"
+              {% if not admin.permission_all %}
+                disabled
+              {% endif %}
+              type="submit" value="Make unofficial" />
           {% else %}
-          Yes
+            <input type="hidden" name="official" value="yes"/>
+            No
+            <input
+              class="btn btn-outline-primary btn-sm"
+              {% if not admin.permission_all %}
+                disabled
+              {% endif %}
+             type="submit" value="Make official" />
           {% endif %}
-        </td>
-      </tr>
-      <tr>
-        <td>Official</td>
-        <td>
-            <form action="{{ url("submission", s.id, shown_dataset.id, "official") }}" name="official_status_form" method="POST">
-            {{ xsrf_form_html|safe }}
-            {% if s.official %}
-              <input type="hidden" name="official" value="no"/>
-              Yes
-              <input
-              {% if not admin.permission_all %}
-                  disabled
-              {% endif %}
-               type="submit" value="Make unofficial" />
-            {% else %}
-              <input type="hidden" name="official" value="yes"/>
-              No
-              <input
-              {% if not admin.permission_all %}
-                  disabled
-              {% endif %}
-               type="submit" value="Make official" />
-            {% endif %}
-            </form>
-        </td>
-      </tr>
-      <tr>
-        <td>Status</td>
-        <td id="submission_status">
-          {% if status == SubmissionResult.COMPILING %}
+          </form>
+      </td>
+    </tr>
+    <tr>
+      <td>Status</td>
+      <td id="submission_status">
+        {% if status == SubmissionResult.COMPILING %}
           Compiling...
-          {% elif status == SubmissionResult.COMPILATION_FAILED %}
+        {% elif status == SubmissionResult.COMPILATION_FAILED %}
           Compilation failed
-          {% elif status == SubmissionResult.EVALUATING %}
+        {% elif status == SubmissionResult.EVALUATING %}
           Evaluating...
-          {% elif status == SubmissionResult.SCORING %}
+        {% elif status == SubmissionResult.SCORING %}
           Scoring...
-          {% elif status == SubmissionResult.SCORED %}
-            {% if st is defined %}
-              {% set max_score = st.max_score %}
-            {% else %}
-              {% set max_score = "[Cannot get score type - see logs]" %}
-            {% endif %}
-          Scored ({{ sr.score }} / {{ max_score }})
+        {% elif status == SubmissionResult.SCORED %}
+          {% if st is defined %}
+            {% set max_score = st.max_score %}
           {% else %}
-          N/A
+            {% set max_score = "[Cannot get score type - see logs]" %}
           {% endif %}
-        </td>
-      </tr>
-      {% if sr is not none %}
+          Scored ({{ sr.score }} / {{ max_score }})
+        {% else %}
+          N/A
+        {% endif %}
+      </td>
+    </tr>
+    {% if sr is not none %}
       <tr>
         <td>Failures during compilation</td>
         <td>{{ sr.compilation_tries }}</td>
@@ -148,41 +148,35 @@
         <td>Max memory used</td>
         <td>{% if m is not none %}{{ m // (1024 ** 2) }} MiB{% else %}N/A{% endif %}</td>
       </tr>
-      {% endif %}
-      <tr>
-        <td>Reevaluate</td>
-        <td>
-          {{ ReevaluationButtons(
-                 url("submission", s.id, shown_dataset.id),
-                 submission_id=s.id,
-                 dataset_id=shown_dataset.id) }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    {% endif %}
+    <tr>
+      <td class="align-middle">Reevaluate</td>
+      <td>
+        {{ ReevaluationButtons(
+               url("submission", s.id, shown_dataset.id),
+               submission_id=s.id,
+               dataset_id=shown_dataset.id) }}
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-</div>
+<h2 class="mt-4">Comment</h2>
 
-<h2 id="title_comment" class="toggling_on">Comment</h2>
+<form enctype="multipart/form-data" action="{{ url("submission", s.id, shown_dataset.id, "comment") }}" method="POST">
+  {{ xsrf_form_html|safe }}
+  <textarea class="form-control" name="comment" cols="40" rows="3">{{ s.comment }}</textarea><br/>
+  <input
+    class="btn btn-success"
+    {% if not admin.permission_all %}
+      disabled
+    {% endif %}
+    type="submit"/>
+  <input class="btn btn-warning" type="reset" value="Reset" />
+</form>
 
-<div id="comment">
-  <form enctype="multipart/form-data" action="{{ url("submission", s.id, shown_dataset.id, "comment") }}" method="POST">
-    {{ xsrf_form_html|safe }}
-    <textarea name="comment" cols="40" rows="3">{{ s.comment }}</textarea><br/>
-    <input
-{% if not admin.permission_all %}
-       disabled
-{% endif %}
-       type="submit"/>
-    <input type="reset" value="Reset" />
-  </form>
-</div>
-
-  {% if sr is not none and sr.scored() %}
-
-<h2 id="title_evaluation_user" class="toggling_on">Evaluation (as seen by the user)</h2>
-<div id="evaluation_user">
-
+{% if sr is not none and sr.scored() %}
+  <h2 class="mt-4">Evaluation (as seen by the user)</h2>
   <div class="score_details" id="evaluation_{{ s.id }}">
     {% if s.tokened() %}
       {{ st.get_html_details(sr.score_details)|safe }}
@@ -190,16 +184,11 @@
       {{ st.get_html_details(sr.public_score_details)|safe }}
     {% endif %}
   </div>
-</div>
+{% endif %}
 
-  {% endif %}
-
-  {% if sr is not none and sr.evaluated() %}
-
-<h2 id="title_evaluation_admin" class="toggling_on">Evaluation (as seen by the admin)</h2>
-<div id="evaluation_admin">
-
-  <table class="bordered">
+{% if sr is not none and sr.evaluated() %}
+  <h2 class="mt-4">Evaluation (as seen by the admin)</h2>
+  <table class="table table-sm">
     <thead>
       <tr>
         <th>#</th>
@@ -226,13 +215,13 @@
           <td>{{ ev.evaluation_shard }}</td>
           <td>
             {% if ev.execution_time is not none %}
-            ({{ ev.execution_time }} s)
+              ({{ ev.execution_time }} s)
             {% endif %}
             {% if ev.execution_wall_clock_time is not none %}
-            ({{ ev.execution_wall_clock_time }} s)
+              ({{ ev.execution_wall_clock_time }} s)
             {% endif %}
             {% if ev.execution_memory is not none %}
-            ({{ (ev.execution_memory // 1024) // 1024 }} MiB)
+              ({{ (ev.execution_memory // 1024) // 1024 }} MiB)
             {% endif %}
           </td>
           <td>{{ ev.evaluation_sandbox }}</td>
@@ -241,17 +230,10 @@
       {% endif %}
     </tbody>
   </table>
+{% endif %}
 
-</div>
-
-
-  {% endif %}
-
-  {% if sr is not none and sr.compiled() %}
-
-<h2 id="title_compilation" class="toggling_on">Compilation</h2>
-<div id="compilation">
-
+{% if sr is not none and sr.compiled() %}
+  <h2 class="mt-4">Compilation</h2>
   <h3>Outcome</h3>
   <pre>{% if sr.compilation_text|length > 0 %}{{ sr.compilation_text|format_status_text }}{% endif %}</pre>
 
@@ -260,9 +242,6 @@
 
   <h3>Standard error</h3>
   <pre>{% if sr.compilation_stderr is not none %}{{ sr.compilation_stderr }}{% endif %}</pre>
-
-</div>
-
-  {% endif %}
+{% endif %}
 
 {% endblock core %}

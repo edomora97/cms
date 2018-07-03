@@ -2,18 +2,24 @@
 
 {% block core %}
 
-<div class="core_title">
-  <h1>New task</h1>
-</div>
+<h1 class="display-4">New task</h1>
 
-<!-- We use "multipart/form-data" to have Tornado distinguish between missing and empty values. -->
 <form enctype="multipart/form-data" action="{{ url("tasks", "add") }}" method="post" >
   {{ xsrf_form_html|safe }}
-  <span class="info" title="A short name for the task, preferably using only letters, numbers and underscores."></span>
-  Name:
-  <input type="text" name="name">
 
-  <input type="submit">
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      <span class="help">
+        Name
+        <span class="help-text">A short name for the task, preferably using only letters, numbers and underscores.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="name">
+    </div>
+  </div>
+
+  <input class="btn btn-success" type="submit">
 </form>
 
 {% endblock core %}

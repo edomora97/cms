@@ -1,0 +1,121 @@
+@media only screen and (min-width: 600px) {
+    .wrapper {
+        display: flex;
+        width: 100%;
+        align-items: stretch;
+    }
+
+    #sidebar {
+        min-width: 290px;
+        max-width: 290px;
+        min-height: 100vh;
+        margin-right: 10px;
+        padding-right: 15px;
+        border-right: 1px solid #ccc;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .wrapper {
+        display: block;
+        align-items: normal;
+    }
+    #sidebar {
+        min-width: 0;
+        max-width: 600px;
+        min-height: 0;
+        border-right: none;
+        padding-right: 0;
+        margin-right: 0;
+    }
+}
+
+#sidebar h1 {
+    font-size: 1.8rem;
+}
+#sidebar h2 {
+    font-size: 1.5rem;
+}
+
+.change-secret {
+    font-size: 0.9em;
+}
+
+#sidebar ul {
+    padding-left: 0;
+}
+
+#sidebar ul {
+    list-style-type: none;
+}
+
+#logs td {
+    padding-bottom: 0;
+}
+
+#subpage {
+    display: block;
+    position: absolute;
+    width: 80%;
+    right: 0;
+    top: 0;
+    z-index: 10;
+    background: white;
+    padding-left: 10px;
+    border-left: 2px solid #ccc;
+}
+
+
+
+
+/*.edit-form td:first-child {
+    width: 30%;
+}
+
+.edit-form td:last-child {
+    width: 70%;
+}*/
+
+.edit-form .language {
+    width: 40%;
+}
+
+/* Tooltip container */
+.help {
+    border-bottom: 1px dotted black;
+    cursor: help;
+}
+
+/* Tooltip text */
+.help .help-text {
+    visibility: hidden;
+    max-width: 480px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+
+    position: absolute;
+    z-index: 1;
+    display: block;
+}
+
+.help:hover .help-text {
+    visibility: visible;
+}
+
+.notifications {
+    position: absolute;
+    right: 30px;
+}
+
+.notification {
+    width: 300px;
+    z-index: 100000;
+    margin-top: 10px;
+}
+
+.notification_close {
+    cursor: pointer;
+}

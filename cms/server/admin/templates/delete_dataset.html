@@ -1,16 +1,21 @@
 {% extends "base.html" %}
 
 {% block core %}
-<div class="core_title">
-  <h1><a href="{{ url("task", task.id) }}">{{ task.title }} ({{ task.name }})</a> - Delete dataset</h1>
-</div>
+<h1 class="display-4">Remove Dataset</h1>
 
-<form action="{{ url("dataset", dataset.id, "delete") }}" method="POST">
+{% if admin.permission_all %}
+  <p>
+    Are you sure you want to remove dataset <code>{{ dataset.description }}</code> of task {{ task.title }} ({{ task.name }}), including all associated managers, test cases, and submission results?
+    <br>
+    This operation cannot be undone.
+  </p>
+  <form action="{{ url("dataset", dataset.id, "delete") }}" method="POST" class="d-inline">
     {{ xsrf_form_html|safe }}
+    <input type="submit" class="btn btn-outline-danger" value="Yes"/>
+  </form>
+  <a href="{{ url("task", task.id) }}" class="btn btn-outline-primary">No</a>
+{% else %}
+  You do not have permission to remove a user.
+{% endif %}
 
-    Are you sure you want to delete the dataset "{{ dataset.description }}" and all associated managers, test cases, and submission results?<br/>
-
-    <input type="submit" value="Delete">
-    <input type="button" value="Cancel" onclick="javascript:history.back();">
-</form>
 {% endblock core %}

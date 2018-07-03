@@ -45,6 +45,7 @@ contest_id (int|None): the id of the contest to invalidate.
 {% if not admin.permission_all %}
         disabled
 {% endif %}
+        class="btn btn-sm btn-outline-secondary"
         title="Compilation" >C</button>
 <button onclick="cmsrpc_request(
                  'EvaluationService', 0,
@@ -58,6 +59,7 @@ contest_id (int|None): the id of the contest to invalidate.
 {% if not admin.permission_all %}
         disabled
 {% endif %}
+        class="btn btn-sm btn-outline-secondary"
         title="Evaluation" >E</button>
 <button onclick="cmsrpc_request(
                  'ScoringService', 0,
@@ -71,5 +73,6 @@ contest_id (int|None): the id of the contest to invalidate.
 {% if not admin.permission_all %}
         disabled
 {% endif %}
+        class="btn btn-sm btn-outline-secondary"
         title="Score" >S</button>
 {% endmacro %}

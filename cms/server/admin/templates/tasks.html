@@ -2,40 +2,38 @@
 
 {% block core %}
 
-<div class="core_title">
-  <h1>Tasks list</h1>
-</div>
+<h1 class="display-4">Tasks list</h1>
 
-<form action="{{ url("tasks") }}" method="POST">
-  {{ xsrf_form_html|safe }}
-  Edit selected task:
-   <input type="submit"
-         name="operation"
-         value="Remove"
-{% if not admin.permission_all %}
-         disabled
-{% endif %}
-         />
-  <table class="bordered">
+  <table class="table table-sm">
     <thead>
       <tr>
-        <th></th>
         <th>Name</th>
         <th>Title</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       {% for t in task_list %}
       <tr>
+        <td class="align-middle"><a href="{{ url("task", t.id) }}">{{ t.name }}</a></td>
+        <td class="align-middle">{{ t.title }}</td>
         <td>
-          <input type="radio" name="task_id" value="{{ t.id }}"/>
+          <form action="{{ url("tasks") }}" method="POST">
+            {{ xsrf_form_html|safe }}
+            <input type="hidden" name="task_id" value="{{ t.id }}"/>
+            <input type="submit"
+                   name="operation"
+                   value="Remove"
+                   class="btn btn-danger btn-sm"
+                   {% if not admin.permission_all %}
+                     disabled
+                   {% endif %}
+                   />
+          </form>
         </td>
-        <td><a href="{{ url("task", t.id) }}">{{ t.name }}</a></td>
-        <td>{{ t.title }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-</form>
 
 {% endblock core %}

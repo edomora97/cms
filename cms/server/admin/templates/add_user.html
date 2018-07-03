@@ -2,76 +2,94 @@
 
 {% block core %}
 
-<h1>New user</h1>
+<h1 class="primary-4">New user</h1>
 
-<h2 id="title_general_info" class="toggling_on">General information</h2>
-<div id="general_info">
-  <!-- We use "multipart/form-data" to have Tornado distinguish between missing and empty values. -->
-  <form enctype="multipart/form-data" action="{{ url("users", "add") }}" method="POST">
-    {{ xsrf_form_html|safe }}
-    <table>
-      <tr>
-        <td>
-          <span class="info" title="First name of the contestant."></span>
-          First name
-        </td>
-        <td><input type="text" name="first_name"/></td>
-      </tr>
-      <tr>
-        <td>
-          <span class="info" title="Last name of the contestant."></span>
-          Last name
-        </td>
-        <td><input type="text" name="last_name"/></td>
-      </tr>
-      <tr>
-        <td>
-          <span class="info" title="Username of the contestant (used to log in)."></span>
-          Username
-        </td>
-        <td><input type="text" name="username" /></td>
-      </tr>
-      <tr>
-        <td>
-          <span class="info" title="Contestant password. Caution: stored in plain text."></span>
-          Password
-        </td>
-        <td>
-          <input type="text" name="password" />
-          <select name="method">
-            <option value="plaintext">Plain text</option>
-            <option value="bcrypt" selected>Hashed (bcrypt)</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span class="info" title="Contestant e-mail address."></span>
-          E-mail
-        </td>
-        <td><input type="text" name="email" /></td>
-      </tr>
-      <tr>
-        <td>
-          <span class="info" title="Timezone of the contestant, used to display start, end times and the current server time in local time.
-                                    Example: 'Europe/Rome', 'America/New_York', ..."></span>
-          Timezone
-        </td>
-        <td><input type="text" name="timezone" value=""></td>
-      </tr>
-      <tr>
-        <td>
-          <span class="info" title="Comma-separated list of language codes, from the most to the least preferred.
-                                    Example: 'en, ja'."></span>
-          Preferred languages
-        </td>
-        <td><input type="text" name="preferred_languages" value=""></td>
-      </tr>
-    </table>
-    <input type="submit"/>
-    <input type="reset" value="Reset" />
-  </form>
-  <div class="hr"></div>
-</div>
+<form enctype="multipart/form-data" action="{{ url("users", "add") }}" method="POST">
+  {{ xsrf_form_html|safe }}
+
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      <span class="help">
+        First name
+        <span class="help-text">First name of the contestant.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="first_name"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      <span class="help">
+        Last name
+        <span class="help-text">Last name of the contestant.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="last_name"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      <span class="help">
+        Username
+        <span class="help-text">Username of the contestant (used to log in).</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="username" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      <span class="help">
+        Password
+        <span class="help-text">Contestant password. Caution: stored in plain text.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      {% set hashed_password = None %}
+      {% include "fragments/hashed_password_form.html" %}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      <span class="help">
+        E-mail
+        <span class="help-text">Contestant e-mail address.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="email" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      <span class="help">
+        Timezone
+        <span class="help-text">Timezone of the contestant, used to display start, end times and the current server time in local time.
+                              Example: 'Europe/Rome', 'America/New_York', ...</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="timezone" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      <span class="help">
+        Preferred languages
+        <span class="help-text">Comma-separated list of language codes, from the most to the least preferred.
+                              Example: 'en, ja'.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="preferred_languages" />
+    </div>
+  </div>
+
+  <input class="btn btn-success" type="submit"/>
+  <input class="btn btn-warning" type="reset" value="Reset" />
+</form>
 
 {% endblock core %}

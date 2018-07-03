@@ -1,44 +1,55 @@
 {% extends "base.html" %}
 
 {% block core %}
-<div class="core_title">
-  <h1><a href="{{ url("task", task.id) }}">{{ task.title }} ({{ task.name }})</a> - Upload testcases</h1>
-</div>
+
+<h1 class="display-4">Upload testcases</h1>
+<h2><a href="{{ url("task", task.id) }}">{{ task.title }} ({{ task.name }})</a></h2>
+
 <form enctype="multipart/form-data" action="{{ url("dataset", dataset.id, "testcases", "add_multiple") }}" method="POST">
   {{ xsrf_form_html|safe }}
-  <table>
-    <tr>
-      <td>Archive (a zip file containing files only):</td>
-      <td>
-        <input type="file" name="archive"/>
-      </td>
-    </tr>
-    <tr>
-      <td>Public</td>
-      <td>
-        <input type="checkbox" name="public">
-      </td>
-    </tr>
-    <tr>
-      <td>Overwrite existing testcases</td>
-      <td>
-        <input type="checkbox" name="overwrite">
-      </td>
-    </tr>
-    <tr>
-      <td>Input file names template (use * as a testcase codename, for example: input.* or *.in)</td>
-      <td>
-        <input type="text" name="input_template" value="input.*">
-      </td>
-    </tr>
-    <tr>
-      <td>Output file names template (use * as a testcase codename, for example: output.* or *.out)</td>
-      <td>
-        <input type="text" name="output_template" value="output.*">
-      </td>
-    </tr>
-  </table>
-  <input type="submit" value="Upload">
-  <input type="Reset" >
+
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      Archive (a zip file containing files only)
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="file" name="archive"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3" for="public">
+      Public
+    </label>
+    <div class="col-md-9">
+      <input type="checkbox" name="public" id="public">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3" for="overwrite">
+      Overwrite existing testcases
+    </label>
+    <div class="col-md-9">
+      <input type="checkbox" name="overwrite" id="overwrite">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      Input file names template (use * as a testcase codename, for example: input.* or *.in)
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="input_template" value="input.*"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      Output file names template (use * as a testcase codename, for example: output.* or *.out)
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="output_template" value="output.*"/>
+    </div>
+  </div>
+
+  <input class="btn btn-success" type="submit" value="Upload">
+  <input class="btn btn-warning" type="Reset" >
 </form>
 {% endblock core %}

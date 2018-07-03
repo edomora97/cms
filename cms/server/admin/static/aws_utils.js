@@ -182,15 +182,16 @@ CMS.AWSUtils.prototype.display_notification = function(type, timestamp,
     var self = this;
     var outer = $("#notifications");
     var timestamp_div = $("<div>")
-        .addClass("notification_timestamp")
+        .addClass("notification_timestamp font-italic")
         .text(timestamp_int != 0 ? this.format_time_or_date(timestamp_int) : "");
     var subject_div = $("<div>")
         .addClass("notification_subject")
         .append(subject_string);
-    var close_div = $('<div>').html("&times;").addClass("notification_close")
+    var close_div = $('<div>').html("&times;").addClass("notification_close float-right")
         .click(function() { self.close_notification(this); });
     var inner =
-        $('<div>').addClass("notification").addClass("notification_type_" + type)
+        $('<div>').addClass("notification alert alert-info")
+            .addClass("notification_type_" + type)
             .append(close_div)
             .append($('<div>').addClass("notification_msg")
                     .append(timestamp_div)
@@ -620,7 +621,7 @@ CMS.AWSUtils.prototype.show_page = function(item, page, elements_per_page) {
     selector.append("Pages: ");
     for (var i = 1; i <= npages; i++) {
         if (i != page) {
-            selector.append($("<a>").text(i + " ")
+            selector.append($("<a>").addClass("btn btn-sm btn-light mr-1").text(i + " ")
                             .click(function(j) {
                                 return function() {
                                     self.show_page(item, j, elements_per_page);
@@ -628,7 +629,7 @@ CMS.AWSUtils.prototype.show_page = function(item, page, elements_per_page) {
                                 };
                             }(i)));
         } else {
-            selector.append(i + " ");
+            selector.append($("<a>").addClass("btn btn-sm btn-light disabled mr-1").text(i + " "));
         }
     }
 };

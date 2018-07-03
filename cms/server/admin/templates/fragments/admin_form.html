@@ -14,39 +14,53 @@
   {% set admin_enabled = True %}
 {% endif %}
 
-<div>
-  <table>
-    <tr>
-      <td>Username</td>
-      <td><input type="text" name="username" value="{{ admin_username }}"/></td>
-    </tr>
-    <tr>
-      <td>Password</td>
-      <td><input type="password" name="password" value=""/></td>
-    </tr>
-    <tr>
-      <td>Name</td>
-      <td><input type="text" name="name" value="{{ admin_name }}"/></td>
-    </tr>
-    {% if admin.permission_all %}
-    <tr>
-      <td>All permissions</td>
-      <td>
-        <input type="checkbox" name="permission_all" {% if admin_permission_all %}checked{% endif %} />
-      </td>
-    </tr>
-    <tr>
-      <td>Messaging permissions</td>
-      <td>
-        <input type="checkbox" name="permission_messaging" {% if admin_permission_messaging %}checked{% endif %} />
-      </td>
-    </tr>
-    <tr>
-      <td>Enabled</td>
-      <td>
-        <input type="checkbox" name="enabled" {% if admin_enabled %}checked{% endif %} />
-      </td>
-    </tr>
-    {% endif %}
-  </table>
+<div class="form-group row">
+  <label class="col-md-3 col-form-label">
+    Username
+  </label>
+  <div class="col-md-9">
+    <input class="form-control" type="text" name="username" value="{{ admin_username }}"/>
+  </div>
 </div>
+<div class="form-group row">
+  <label class="col-md-3 col-form-label">
+    Password
+  </label>
+  <div class="col-md-9">
+    <input class="form-control" type="password" name="password" value=""/>
+  </div>
+</div>
+<div class="form-group row">
+  <label class="col-md-3 col-form-label">
+    Name
+  </label>
+  <div class="col-md-9">
+    <input class="form-control" type="text" name="name" value="{{ admin_name }}"/>
+  </div>
+</div>
+{% if admin.permission_all %}
+  <div class="form-group row">
+    <label class="col-md-3" for="permission_all">
+      All permissions
+    </label>
+    <div class="col-md-9">
+      <input type="checkbox" id="permission_all" name="permission_all" {% if admin_permission_all %}checked{% endif %} />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3" for="permission_messaging">
+      Messaging permissions
+    </label>
+    <div class="col-md-9">
+      <input type="checkbox" id="permission_messaging" name="permission_messaging" {% if admin_permission_messaging %}checked{% endif %} />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3" for="enabled">
+      Enabled
+    </label>
+    <div class="col-md-9">
+      <input type="checkbox" id="enabled" name="enabled" {% if admin_enabled %}checked{% endif %} />
+    </div>
+  </div>
+{% endif %}

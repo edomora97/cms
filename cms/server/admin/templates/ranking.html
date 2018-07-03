@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
 {% block core %}
-<div class="core_title">
-  <h1>Ranking</h1>
-</div>
+<h1 class="display-4">Ranking</h1>
+
 Download as <a href="{{ url("contest", contest.id, "ranking", "csv") }}">csv</a>, <a href="{{ url("contest", contest.id, "ranking", "txt") }}">text</a>.
-<table class="bordered">
+<table class="table table-sm">
   <thead>
     <tr>
       <th>Username</th>
@@ -26,22 +25,22 @@ Download as <a href="{{ url("contest", contest.id, "ranking", "csv") }}">csv</a>
     {# - total_score: the total score for the contest. #}
     {% for p in contest.participations|sort(attribute="total_score")|reverse %}
       {% if not p.hidden %}
-    <tr>
-      <td><a href="{{ url("contest", contest.id, "user", p.user.id, "edit") }}">{{ p.user.username }}</a></td>
-      <td>{{ "%s %s"|format(p.user.first_name, p.user.last_name) }}</td>
-      {% if show_teams %}
-        {% if p.team %}
-        <td><a href="{{ url("team", p.team_id) }}">{{ p.team.name }}</a></td>
-        {% else %}
-        <td></td>
-        {% endif %}
-      {% endif %}
-      {% for t_score, t_partial in p.scores %}
-      <td>{{ t_score }}{% if t_partial %}*{% endif %}</td>
-      {% endfor %}
-      {% set total_score, partial = p.total_score %}
-      <td>{{ total_score }}{% if partial %}*{% endif %}</td>
-    </tr>
+        <tr>
+          <td><a href="{{ url("contest", contest.id, "user", p.user.id, "edit") }}">{{ p.user.username }}</a></td>
+          <td>{{ "%s %s"|format(p.user.first_name, p.user.last_name) }}</td>
+          {% if show_teams %}
+            {% if p.team %}
+            <td><a href="{{ url("team", p.team_id) }}">{{ p.team.name }}</a></td>
+            {% else %}
+            <td></td>
+            {% endif %}
+          {% endif %}
+          {% for t_score, t_partial in p.scores %}
+          <td>{{ t_score }}{% if t_partial %}*{% endif %}</td>
+          {% endfor %}
+          {% set total_score, partial = p.total_score %}
+          <td>{{ total_score }}{% if partial %}*{% endif %}</td>
+        </tr>
       {% endif %}
     {% endfor %}
   </tbody>

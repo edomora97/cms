@@ -2,12 +2,12 @@
 
 {% block core %}
 
-<div class="core_title">
-  <h1>Teams list</h1>
-</div>
+<h1 class="display-4">Teams list</h1>
 
-<div id="details">
-  <table class="bordered">
+{% if team_list|length == 0 %}
+  <p>No teams found.</p>
+{% else %}
+  <table class="table table-sm">
     <thead>
       <tr>
         <th>Code</th>
@@ -16,13 +16,13 @@
     </thead>
     <tbody>
       {% for t in team_list|sort(attribute="code") %}
-      <tr>
-        <td><a href="{{ url("team", t.id) }}">{{ t.code }}</a></td>
-        <td>{{ t.name }}</td>
-      </tr>
+        <tr>
+          <td><a href="{{ url("team", t.id) }}">{{ t.code }}</a></td>
+          <td>{{ t.name }}</td>
+        </tr>
       {% endfor %}
     </tbody>
   </table>
-</div>
+{% endif %}
 
 {% endblock core %}

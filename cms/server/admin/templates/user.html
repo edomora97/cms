@@ -1,143 +1,173 @@
 {% extends "base.html" %}
 
 {% block core %}
-<h1>{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</h1>
+<h1 class="display-4">{{ user.first_name }} {{ user.last_name }} <small>({{ user.username }})</small></h1>
 
-<h2 id="title_participations" class="toggling_on">Participations</h2>
-<div id="participations">
+<h2 class="mt-4">Participations</h2>
+<form action="{{ url("user", user.id, "add_participation") }}" method="POST">
+  {{ xsrf_form_html|safe }}
 
-  <form action="{{ url("user", user.id, "add_participation") }}" method="POST">
-    {{ xsrf_form_html|safe }}
-    Add a new participation:
-    <select name="contest_id">
-      <option value="null" selected>Select a contest</option>
-      {% for c in unassigned_contests %}
-      <option value="{{ c.id }}">
-        {{ c.name }}
-      </option>
-      {% endfor %}
-    </select>
-    <input type="checkbox" name="hidden" id="hidden" /><label for="hidden">Hidden</label>
-    <input type="checkbox" name="unrestricted" id="unrestricted" /><label for="unrestricted">Unrestricted</label>
-    <input type="submit" value="Add participation" />
-  </form>
-
-  {% if participations == [] %}
-  <p>No participations found.</p>
-  {% else %}
-  <form action="{{ url("user", user.id, "edit_participation") }}" method="POST">
-    {{ xsrf_form_html|safe }}
-    Edit selected participation:
-    <input type="submit" name="operation" value="Remove" />
-    <table class="bordered">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Participation</th>
-          <th>Hidden?</th>
-          <th>Unrestricted?</th>
-          <th>Contest</th>
-          <th>Contest description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for p in participations %}
-        <tr>
-          <td>
-            <input type="radio" name="contest_id" value="{{ p.contest.id }}"/>
-          </td>
-          <td><a href="{{ url("contest", p.contest.id, "user", p.user.id, "edit") }}">{{ p.user.username }}</a></td>
-          <td>{{ p.hidden }}</td>
-          <td>{{ p.unrestricted }}</td>
-          <td><a href="{{ url("contest", p.contest.id) }}">{{ p.contest.name }}</a></td>
-          <td>{{ p.contest.description }}</td>
-        </tr>
+  <div class="row">
+    <div class="col-lg-2">
+      <label class="col-form-label">Add a new participation:</label>
+    </div>
+    <div class="col-lg-4">
+      <select name="contest_id" class="form-control">
+        <option value="null" selected>Select a contest</option>
+        {% for c in unassigned_contests %}
+          <option value="{{ c.id }}">
+            {{ c.name }}
+          </option>
         {% endfor %}
-      </tbody>
-    </table>
-  </form>
-  {% endif %}
-  <div class="hr"></div>
-</div>
+      </select>
+    </div>
+    <div class="col-lg-3 col-form-label">
+      <label class="mr-2"><input type="checkbox" name="hidden" id="hidden" />Hidden</label>
+      <label class="mr-2"><input type="checkbox" name="unrestricted" id="unrestricted" />Unrestricted</label>
+    </div>
+    <div class="col-lg-2">
+      <input class="btn btn-success" type="submit" value="Add participation" />
+    </div>
+  </div>
+</form>
 
 
-<h2 id="title_general_info" class="toggling_on">General Information</h2>
-<div id="general_info">
-  <!-- We use "multipart/form-data" to have Tornado distinguish between missing and empty values. -->
-  <form enctype="multipart/form-data" action="{{ url("user", user.id) }}" method="POST" style="display:inline;">
-    {{ xsrf_form_html|safe }}
-    <table>
+{% if participations == [] %}
+  <p class="mt-4">No participations found.</p>
+{% else %}
+  <table class="table table-sm mt-4">
+    <thead>
       <tr>
-        <td>
-          <span class="info" title="First name of the contestant."></span>
-          First name
-        </td>
-        <td><input type="text" name="first_name" value="{{ user.first_name }}"/></td>
+        <th>Participation</th>
+        <th>Hidden?</th>
+        <th>Unrestricted?</th>
+        <th>Contest</th>
+        <th>Contest description</th>
+        <th></th>
       </tr>
+    </thead>
+    <tbody>
+      {% for p in participations %}
       <tr>
+        <td><a href="{{ url("contest", p.contest.id, "user", p.user.id, "edit") }}">{{ p.user.username }}</a></td>
+        <td>{{ p.hidden }}</td>
+        <td>{{ p.unrestricted }}</td>
+        <td><a href="{{ url("contest", p.contest.id) }}">{{ p.contest.name }}</a></td>
+        <td>{{ p.contest.description }}</td>
         <td>
-          <span class="info" title="Last name of the contestant."></span>
-          Last name
-        </td>
-        <td><input type="text" name="last_name" value="{{ user.last_name }}"/></td>
-      </tr>
-      <tr>
-        <td>
-          <span class="info" title="Username of the contestant (used to log in)."></span>
-          Username
-        </td>
-        <td><input type="text" name="username" value="{{ user.username }}"/></td>
-      </tr>
-      <tr>
-        <td>
-          <span class="info" title="Contestant password. Caution: stored in plain text."></span>
-          Password
-        </td>
-        <td>
-          {% set hashed_password = user.password %}
-          {% include "fragments/hashed_password_form.html" %}
+          <form action="{{ url("user", user.id, "edit_participation") }}" method="POST">
+            {{ xsrf_form_html|safe }}
+            <input type="hidden" name="contest_id" value="{{ p.contest.id }}">
+            <input class="btn btn-outline-danger btn-sm" type="submit" name="operation" value="Remove" />
+          </form>
         </td>
       </tr>
-      <tr>
-        <td>
-          <span class="info" title="Contestant e-mail address."></span>
-          E-mail
-        </td>
-        <td><input type="text" name="email" value="{{ user.email if user.email is not none else "" }}"/></td>
-      </tr>
-      <tr>
-        <td>
-          <span class="info" title="Timezone of the contestant, used to display start, end times and the current server time in local time.
-                                    Example: 'Europe/Rome', 'America/New_York', ..."></span>
-          Timezone
-        </td>
-        <td><input type="text" name="timezone" value="{{ user.timezone if user.timezone is not none else "" }}"></td>
-      </tr>
-      <tr>
-        <td>
-          <span class="info" title="Comma-separated list of language codes, from the most to the least preferred.
-                                    Example: 'en, ja'."></span>
-          Preferred languages
-        </td>
-        <td><input type="text" name="preferred_languages" value="{{ user.preferred_languages|join(", ") }}"></td>
-      </tr>
-    </table>
-    <input type="submit" value="Update" />
-    <input type="reset" value="Reset" />
-  </form>
-  <form action="{{ url("users") }}" method="POST" style="display:inline;">
-      {{ xsrf_form_html|safe }}
-      <input type="hidden" name="user_id" value="{{ user.id }}"/>
-      <input type="submit"
-           name="operation"
-           value="Remove" style="float: right;"
-  {% if not admin.permission_all %}
-           disabled
-  {% endif %}
-           />
-  </form>
-  <div class="hr"></div>
-</div>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+
+<h2 class="mt-4">General Information</h2>
+<form enctype="multipart/form-data" action="{{ url("user", user.id) }}" method="POST">
+  {{ xsrf_form_html|safe }}
+
+  <div class="form-group row">
+   <label class="col-md-3 col-form-label">
+      <span class="help">
+        First name
+        <span class="help-text">First name of the contestant.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="first_name" value="{{ user.first_name }}"/>
+    </div>
+  </div>
+  <div class="form-group row">
+   <label class="col-md-3 col-form-label">
+      <span class="help">
+        Last name
+        <span class="help-text">Last name of the contestant.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="last_name" value="{{ user.last_name }}"/>
+    </div>
+  </div>
+  <div class="form-group row">
+   <label class="col-md-3 col-form-label">
+      <span class="help">
+        Username
+        <span class="help-text">Username of the contestant (used to log in).</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="username" value="{{ user.username }}"/>
+    </div>
+  </div>
+  <div class="form-group row">
+   <label class="col-md-3 col-form-label">
+      <span class="help">
+        Password
+        <span class="help-text">Contestant password. Caution: stored in plain text.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      {% set hashed_password = user.password %}
+      {% include "fragments/hashed_password_form.html" %}
+    </div>
+  </div>
+  <div class="form-group row">
+   <label class="col-md-3 col-form-label">
+      <span class="help">
+        E-mail
+        <span class="help-text">Contestant e-mail address.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="email" value="{{ user.email if user.email is not none else "" }}"/>
+    </div>
+  </div>
+  <div class="form-group row">
+   <label class="col-md-3 col-form-label">
+      <span class="help">
+        Timezone
+        <span class="help-text">Timezone of the contestant, used to display start, end times and the current server time in local time.
+                              Example: 'Europe/Rome', 'America/New_York', ...</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="timezone" value="{{ user.timezone if user.timezone is not none else "" }}">
+    </div>
+  </div>
+  <div class="form-group row">
+   <label class="col-md-3 col-form-label">
+      <span class="help">
+        Preferred languages
+        <span class="help-text">Comma-separated list of language codes, from the most to the least preferred.
+                                  Example: 'en, ja'.</span>
+      </span>
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="preferred_languages" value="{{ user.preferred_languages|join(", ") }}">
+    </div>
+  </div>
+  <input class="btn btn-success" type="submit" value="Update" />
+  <input class="btn btn-warning" type="reset" value="Reset" />
+</form>
+
+<form action="{{ url("users") }}" method="POST">
+  {{ xsrf_form_html|safe }}
+  <input type="hidden" name="user_id" value="{{ user.id }}"/>
+  <input type="submit"
+       name="operation"
+       value="Remove"
+       class="btn btn-danger mt-4"
+       {% if not admin.permission_all %}
+         disabled
+       {% endif %}
+       />
+</form>
 
 
 {% endblock core %}

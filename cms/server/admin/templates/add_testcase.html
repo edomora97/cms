@@ -1,38 +1,46 @@
 {% extends "base.html" %}
 
 {% block core %}
-<div class="core_title">
-  <h1><a href="{{ url("task", task.id) }}">{{ task.title }} ({{ task.name }})</a> - Upload testcase</h1>
-</div>
+<h1 class="display-4">Upload testcase</h1>
+<h2><a href="{{ url("task", task.id) }}">{{ task.title }} ({{ task.name }})</a></h2>
+
 <form enctype="multipart/form-data" action="{{ url("dataset", dataset.id, "testcases", "add") }}" method="POST">
   {{ xsrf_form_html|safe }}
-  <table>
-    <tr>
-      <td>Codename:</td>
-      <td>
-        <input type="text" name="codename"/>
-      </td>
-    </tr>
-    <tr>
-      <td>Input:</td>
-      <td>
-        <input type="file" name="input"/>
-      </td>
-    </tr>
-    <tr>
-      <td>Output:</td>
-      <td>
-        <input type="file" name="output"/>
-      </td>
-    </tr>
-    <tr>
-      <td>Public</td>
-      <td>
-        <input type="checkbox" name="public">
-      </td>
-    </tr>
-  </table>
-  <input type="submit" value="Upload">
-  <input type="Reset" >
+
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      Codename
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" name="codename"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      Input
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="file" name="input"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label">
+      Output
+    </label>
+    <div class="col-md-9">
+      <input class="form-control" type="file" name="output"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3" for="public">
+      Public
+    </label>
+    <div class="col-md-9">
+      <input type="checkbox" name="public" id="public">
+    </div>
+  </div>
+
+  <input class="btn btn-success" type="submit" value="Upload">
+  <input class="btn btn-warning" type="Reset" >
 </form>
 {% endblock core %}

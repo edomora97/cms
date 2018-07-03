@@ -20,73 +20,73 @@
   <td><a href="{{ url("task", s.task.id) }}">{{ s.task.name }}</a></td>
   <td>
     {% if status == SubmissionResult.COMPILING %}
-    Compiling...
+      Compiling...
     {% else %}
-    <div id="title_evaluation_{{ s.id }}" class="toggling_off">
+      <div id="title_evaluation_{{ s.id }}" class="toggling_off">
 
-      {% if status == SubmissionResult.COMPILATION_FAILED %}
-      Compilation failed
-      <div id="evaluation_{{ s.id }}" style="display: none;">
+        {% if status == SubmissionResult.COMPILATION_FAILED %}
+          Compilation failed
+          <div id="evaluation_{{ s.id }}" style="display: none;">
 
-      {% elif status == SubmissionResult.EVALUATING %}
-      Evaluating...
-      <div id="evaluation_{{ s.id }}" style="display: none;">
+        {% elif status == SubmissionResult.EVALUATING %}
+          Evaluating...
+          <div id="evaluation_{{ s.id }}" style="display: none;">
 
-      {% elif status == SubmissionResult.SCORING %}
-      Scoring...
-      <div id="evaluation_{{ s.id }}" style="display: none;">
-        {% if sr.evaluated() %}
-        <h3>Testcases</h3>
-        <table class="nested bordered">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Codename</th>
-              <th>Outcome</th>
-              <th>Visible</th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for ev in sr.evaluations|sort(attribute="codename") %}
-            <tr>
-              <td>{{ loop.index }}</td>
-              <td>{{ ev.codename }}</td>
-              <td>{{ ev.outcome }}</td>
-              <td style="text-align: center">
-                <input type="checkbox" disabled{{ " checked" if s.token is not none or ev.testcase.public else "" }}>
-              </td>
-              <td>{{ ev.text|format_status_text }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% endif %}
+        {% elif status == SubmissionResult.SCORING %}
+          Scoring...
+          <div id="evaluation_{{ s.id }}" style="display: none;">
+          {% if sr.evaluated() %}
+            <h3>Testcases</h3>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Codename</th>
+                  <th>Outcome</th>
+                  <th>Visible</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for ev in sr.evaluations|sort(attribute="codename") %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ ev.codename }}</td>
+                  <td>{{ ev.outcome }}</td>
+                  <td style="text-align: center">
+                    <input type="checkbox" disabled{{ " checked" if s.token is not none or ev.testcase.public else "" }}>
+                  </td>
+                  <td>{{ ev.text|format_status_text }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
 
-      {% elif status == SubmissionResult.SCORED %}
-        {% if score_type is defined %}
-          {% set max_score = score_type.max_score %}
+        {% elif status == SubmissionResult.SCORED %}
+          {% if score_type is defined %}
+            {% set max_score = score_type.max_score %}
+          {% else %}
+            {% set max_score = "[Cannot get score type - see logs]" %}
+          {% endif %}
+
+          Scored ({{ sr.score }} / {{ max_score }})
+          <div id="evaluation_{{ s.id }}" class="score_details" style="display: none;">
+          {% if score_type is defined %}
+            {{ score_type.get_html_details(sr.score_details)|safe }}
+          {% else %}
+            [Cannot get score type - see logs]
+          {% endif %}
+
         {% else %}
-          {% set max_score = "[Cannot get score type - see logs]" %}
-        {% endif %}
-      Scored ({{ sr.score }} / {{ max_score }})
-      <div id="evaluation_{{ s.id }}" class="score_details" style="display: none;">
-        {% if score_type is defined %}
-          {{ score_type.get_html_details(sr.score_details)|safe }}
-        {% else %}
-        [Cannot get score type - see logs]
-        {% endif %}
+          [Unknown status]
+          <div id="evaluation_{{ s.id }}" style="display: none;">
 
-      {% else %}
-      [Unknown status]
-      <div id="evaluation_{{ s.id }}" style="display: none;">
-
-      {% endif %}
-        <h3>Compilation output</h3>{# TODO: trim long outputs and add facility to see raw #}
-        <pre>{% if sr.compilation_text|length > 0 %}{{ sr.compilation_text|format_status_text }}{% endif %}</pre>
+        {% endif %}
+          <h3>Compilation output</h3>{# TODO: trim long outputs and add facility to see raw #}
+          <pre>{% if sr.compilation_text|length > 0 %}{{ sr.compilation_text|format_status_text }}{% endif %}</pre>
+        </div>
       </div>
-    </div>
-
     {% endif %}
   </td>
   <td>
