@@ -27,6 +27,7 @@ if (!("EventSource" in window)) {
         <script src="Overview.js"></script>
         <script src="Scoreboard.js"></script>
         <script src="Ranking.js"></script>
+        <script src="Filter.js"></script>
         <title>Ranking</title>
     </head>
     <body>
@@ -38,6 +39,16 @@ if (!("EventSource" in window)) {
                 <div id="ConnectionStatus_box">
                     <div id="ConnectionStatus_label">Status</div>
                     <div id="ConnectionStatus_text"></div>
+                </div>
+                <div id="Filter">
+                    <div>
+                        <input name="group" id="all" name="all" type="radio" checked />
+                        <label for="all">Tutti</label>
+                        <input name="group" id="triennio" name="triennio" type="radio" />
+                        <label for="triennio">Triennio</label>
+                        <input name="group" id="biennio" name="biennio" type="radio" />
+                        <label for="biennio">Biennio</label>
+                    </div>
                 </div>
             </div>
             <div id="TimeView">

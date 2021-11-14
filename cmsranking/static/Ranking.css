@@ -84,6 +84,14 @@ abbr {
     overflow-y: scroll;
 }
 
+#Filter {
+    margin: 0 auto;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
 
 /******************************************************************************\
 |                                                                              |
@@ -861,6 +869,9 @@ abbr {
     /*background-image: linear-gradient(rgb(115, 210, 22), rgb(78, 154, 5));*/
 }
 
+.hidden {
+    display: none;
+}
 
 /******************************************************************************\
 |                                                                              |
