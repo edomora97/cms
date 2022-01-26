@@ -3,12 +3,12 @@ entries:
   cms:
   - apiVersion: v2
     appVersion: v1
-    created: "2022-01-26T13:53:54.28756403Z"
+    created: "2022-01-26T13:55:26.744654282Z"
     description: Contest Management System
-    digest: 1c40a98b64d24f14e3f4c803aafe17bf1cb509fbe7fe6cb7ce2a56af6975de4a
+    digest: b32ef1b1f5932604f84adc23e183a65fcdfa5d18b36a71a9088c45fb52264a81
     name: cms
     type: application
     urls:
     - cms-0.0.1.tgz
     version: 0.0.1
-generated: "2022-01-26T13:53:54.286473021Z"
+generated: "2022-01-26T13:55:26.743482975Z"
