@@ -1,3 +1,14 @@
 apiVersion: v1
-entries: {}
-generated: "2022-01-26T14:50:04.124214352+01:00"
+entries:
+  cms:
+  - apiVersion: v2
+    appVersion: v1
+    created: "2022-01-26T13:53:54.28756403Z"
+    description: Contest Management System
+    digest: 1c40a98b64d24f14e3f4c803aafe17bf1cb509fbe7fe6cb7ce2a56af6975de4a
+    name: cms
+    type: application
+    urls:
+    - cms-0.0.1.tgz
+    version: 0.0.1
+generated: "2022-01-26T13:53:54.286473021Z"
