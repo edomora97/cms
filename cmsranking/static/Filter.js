@@ -3,13 +3,10 @@ $(function () {
         $("tr").each(function () {
             const username = $(this).attr("data-user");
             if (!username) return;
-            const isBi =
-                username.startsWith("b") && !username.startsWith("bas");
-            if (
-                who === "all" ||
-                (who === "biennio" && isBi) ||
-                (who === "triennio" && !isBi)
-            ) {
+            const categories = username.split(".")[0];
+            const isBi = categories.includes("b");
+            const isOfficial = categories.includes("t");
+            if ((who === "official" && isOfficial) || (who === "biennio" && isBi)) {
                 $(this).removeClass("hidden");
             } else {
                 $(this).addClass("hidden");
@@ -20,5 +17,5 @@ $(function () {
     $("input[name='group']").change(function (e) {
         doFilter(this.id);
     });
-    doFilter("all");
+    doFilter("official");
 });
