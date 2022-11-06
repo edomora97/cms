@@ -3,7 +3,7 @@ $(function () {
         $("tr").each(function () {
             const username = $(this).attr("data-user");
             if (!username) return;
-            const categories = username.split(".")[0];
+            const categories = username.split("-")[0];
             const isBi = categories.includes("b");
             const isOfficial = categories.includes("t");
             if ((who === "official" && isOfficial) || (who === "biennio" && isBi)) {
