@@ -28,7 +28,7 @@
 import atexit
 import io
 import logging
-import os
+import os.path
 import tempfile
 import fcntl
 from abc import ABCMeta, abstractmethod
@@ -539,7 +539,8 @@ class FileCacher:
     @staticmethod
     def _create_directory_or_die(directory):
         """Create directory and ensure it exists, or raise a RuntimeError."""
-        if not mkdir(directory):
+        os.makedirs(directory, exist_ok=True)
+        if not os.path.exists(directory):
             msg = "Cannot create required directory '%s'." % directory
             logger.error(msg)
             raise RuntimeError(msg)
@@ -726,7 +727,7 @@ class FileCacher:
             with open(dst_path, 'wb') as dst:
                 copyfileobj(src, dst, self.CHUNK_SIZE)
 
-    def put_file_from_fobj(self, src, desc=""):
+    def put_file_from_fobj(self, src, desc="", cache_only=False):
         """Store a file in the storage.
 
         If it's already (for some reason...) in the cache send that
@@ -740,6 +741,8 @@ class FileCacher:
             to read the contents of the file.
         desc (unicode): the (optional) description to associate to the
             file.
+        cache_only (bool): whether to skip looking at the backend,
+            and write only to the cache.
 
         return (unicode): the digest of the stored file.
 
@@ -774,6 +777,9 @@ class FileCacher:
 
             cache_file_path = os.path.join(self.file_dir, digest)
 
+            if cache_only:
+                logger.debug("File %s stored only in the cache at %s",
+                             digest, cache_file_path)
             # Store the file in the backend. We do that even if the file
             # was already in the cache
             # because there's a (small) chance that the file got removed
@@ -781,11 +787,12 @@ class FileCacher:
             # We read from the temporary file before moving it to
             # cache_file_path because the latter might be deleted before
             # we get a chance to open it.
-            with open(dst.name, 'rb') as src:
-                fobj = self.backend.create_file(digest)
-                if fobj is not None:
-                    copyfileobj(src, fobj, self.CHUNK_SIZE)
-                    self.backend.commit_file(fobj, digest, desc)
+            else:
+                with open(dst.name, 'rb') as src:
+                    fobj = self.backend.create_file(digest)
+                    if fobj is not None:
+                        copyfileobj(src, fobj, self.CHUNK_SIZE)
+                        self.backend.commit_file(fobj, digest, desc)
 
             os.rename(dst.name, cache_file_path)
 

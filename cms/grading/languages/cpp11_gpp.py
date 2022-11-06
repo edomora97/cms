@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 # Contest Management System - http://cms-dev.github.io/
-# Copyright © 2016 Stefano Maggiolo <s.maggiolo@gmail.com>
+# Copyright © 2016 Stefano Maggiolo ss.maggiolo@gmail.com>
+# Copyright © 2019 Andrey Vihrov <andrey.vihrov@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -42,22 +43,29 @@ class Cpp11Gpp(CompiledLanguage):
 
     @property
     def header_extensions(self):
-        """See Language.source_extensions."""
+        """See Language.header_extensions."""
         return [".h"]
 
     @property
     def object_extensions(self):
-        """See Language.source_extensions."""
+        """See Language.object_extensions."""
         return [".o"]
 
-    def get_compilation_commands(self,
-                                 source_filenames, executable_filename,
-                                 for_evaluation=True):
+    def get_compilation_commands(
+        self, source_filenames, executable_filename, for_evaluation=True
+    ):
         """See Language.get_compilation_commands."""
         command = ["/usr/bin/g++"]
         if for_evaluation:
             command += ["-DEVAL"]
-        command += ["-std=gnu++11", "-O2", "-pipe", "-static",
-                    "-s", "-o", executable_filename]
+        command += [
+            "-std=gnu++11",
+            "-O2",
+            "-pipe",
+            "-static",
+            "-s",
+            "-o",
+            executable_filename,
+        ]
         command += source_filenames
         return [command]
