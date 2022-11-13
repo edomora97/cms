@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import errno
-import json5
+import pyjson5
 import logging
 import os
 import sys
@@ -165,7 +165,7 @@ class Config:
         """
         # Parse config file.
         try:
-            data = json5.load(conf_fobj)
+            data = pyjson5.load(conf_fobj)
         except ValueError:
             logger.critical("Config file is invalid JSON.")
             return False
