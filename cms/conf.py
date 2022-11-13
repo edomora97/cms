@@ -213,7 +213,7 @@ class Config:
         self.num_proxies_used = None
         self.max_submission_length = 100_000  # 100 KB
         self.max_input_length = 5_000_000  # 5 MB
-        self.stl_path = "/usr/share/cppreference/doc/html/"
+        self.docs_path = "/usr/share/cms/docs"
         # Prefix of 'shared-mime-info'[1] installation. It can be found
         # out using `pkg-config --variable=prefix shared-mime-info`, but
         # it's almost universally the same (i.e. '/usr') so it's hardly
