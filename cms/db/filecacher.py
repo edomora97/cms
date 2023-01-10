@@ -600,28 +600,18 @@ class FileCacher:
         logger.debug("File %s not in cache, downloading "
                      "from database.", digest)
 
-        ftmp_handle, temp_file_path = tempfile.mkstemp(dir=self.temp_dir,
-                                                       text=False)
-        with open(ftmp_handle, 'wb') as ftmp, \
-                self.backend.get_file(digest) as fobj:
-            copyfileobj(fobj, ftmp, self.CHUNK_SIZE)
+        with tempfile.NamedTemporaryFile(dir=self.temp_dir, delete=False) as ftmp:
+            with self.backend.get_file(digest) as fobj:
+                copyfileobj(fobj, ftmp, self.CHUNK_SIZE)
 
-        if not cache_only:
-            # We allow anyone to delete files from the cache directory
-            # self.file_dir at any time. Hence, cache_file_path might no
-            # longer exist an instant after we create it. Opening the
-            # temporary file before renaming it circumvents this issue.
-            # (Note that the temporary file may not be manually deleted!)
-            fd = open(temp_file_path, 'rb')
-
-        # Then move it to its real location (this operation is atomic
-        # by POSIX requirement)
-        os.rename(temp_file_path, cache_file_path)
+            # Then move it to its real location (this operation is atomic
+            # by POSIX requirement)
+            os.rename(ftmp.name, cache_file_path)
 
         logger.debug("File %s downloaded.", digest)
 
         if not cache_only:
-            return fd
+            return open(cache_file_path, 'rb')
 
     def cache_file(self, digest):
         """Load a file into the cache.
