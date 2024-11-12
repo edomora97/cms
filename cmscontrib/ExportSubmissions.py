@@ -59,6 +59,7 @@ TEMPLATE = {
 TEMPLATE[".cpp"] = TEMPLATE[".c"]
 TEMPLATE[".java"] = TEMPLATE[".c"]
 TEMPLATE[".txt"] = TEMPLATE[".c"]
+TEMPLATE[".cs"] = TEMPLATE[".c"]
 
 
 def filter_top_scoring(results, unique):
