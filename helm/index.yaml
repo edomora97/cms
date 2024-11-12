@@ -3,9 +3,9 @@ entries:
   cms:
   - apiVersion: v2
     appVersion: v1
-    created: "2024-11-07T01:01:48.998942119Z"
+    created: "2024-11-12T00:17:44.730795408Z"
     description: Contest Management System
-    digest: e78aeaf170ee652175e022e184368790400cc0e5e6e2e0a3bf50dba8f2c995f4
+    digest: bc5ec06529294e0503cd5588602a40992d6a1c545dbe44c4b36a3a607c690883
     name: cms
     type: application
     urls:
@@ -13,7 +13,7 @@ entries:
     version: 0.0.5
   - apiVersion: v2
     appVersion: v1
-    created: "2024-11-07T01:01:48.998299389Z"
+    created: "2024-11-12T00:17:44.730238081Z"
     description: Contest Management System
     digest: 30a196b90197773c1e5ee61144950dfb1077bd1962625e0552da77362c20a350
     name: cms
@@ -23,7 +23,7 @@ entries:
     version: 0.0.4
   - apiVersion: v2
     appVersion: v1
-    created: "2024-11-07T01:01:48.996874189Z"
+    created: "2024-11-12T00:17:44.729701091Z"
     description: Contest Management System
     digest: 0a9b0cc5133010a1c08a2a4362dd777176786de69753d74da528dfebf899fae1
     name: cms
@@ -33,7 +33,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: v1
-    created: "2024-11-07T01:01:48.996319724Z"
+    created: "2024-11-12T00:17:44.729124127Z"
     description: Contest Management System
     digest: 43ed889505885f0436b94f90e76073738cd2c89fd19352cb7955d6f5d1464b3d
     name: cms
@@ -43,7 +43,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: v1
-    created: "2024-11-07T01:01:48.995569664Z"
+    created: "2024-11-12T00:17:44.728511526Z"
     description: Contest Management System
     digest: cfa421d2fcdfe9b0c176fdf601a4a297e19e5c51a8230c2728dd710fe3b19fc8
     name: cms
@@ -51,4 +51,4 @@ entries:
     urls:
     - cms-0.0.1.tgz
     version: 0.0.1
-generated: "2024-11-07T01:01:48.994810085Z"
+generated: "2024-11-12T00:17:44.726796795Z"
