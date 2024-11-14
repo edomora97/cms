@@ -214,7 +214,7 @@ class LargeObject(io.RawIOBase):
         data = self._execute("SELECT loread(%(fd)s, %(len)s);",
                              {'fd': self._fd, 'len': len(buf)},
                              "Couldn't write to large object.")
-        buf[:len(data)] = data
+        buf[:len(data)] = data.tobytes()
         return len(data)
 
     def write(self, buf):
@@ -341,6 +341,13 @@ class LargeObject(io.RawIOBase):
         with conn.cursor() as cursor:
             cursor.execute("SELECT lo_unlink(%(loid)s);", {'loid': loid})
 
+    def buffered(self):
+        buf_size = 64 << 20
+        if self._readable and self._writable: return io.BufferedRandom(self, buffer_size=buf_size)
+        if self._readable: return io.BufferedReader(self, buffer_size=buf_size)
+        if self._writable: return io.BufferedWriter(self, buffer_size=buf_size)
+        raise ValueError("Unusable file object")
+
 
 class FSObject(Base):
     """Class to describe a file stored in the database.
@@ -387,9 +394,7 @@ class FSObject(Base):
         # Here we rely on the fact that we're using psycopg2 as
         # PostgreSQL backend.
         lobj = LargeObject(self.loid, mode)
-
-        # FIXME Wrap with a io.BufferedReader/Writer/Random?
-        return lobj
+        return lobj.buffered()
 
     def delete(self):
         """Delete this file.
