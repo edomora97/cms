@@ -381,9 +381,9 @@ class DocumentationHandler(ContestHandler):
                 ext = language.source_extensions[0][1:] # remove dot
                 path = os.path.join(config.docs_path, ext)
                 if os.path.exists(path):
-                    language_docs.append((language.name, f"./docs/{ext}/index.html"))
+                    language_docs.append((language.name, ext))
         else:
-            language_docs.append(("C++", "./docs/en/index.html"))
+            language_docs.append(("C++", "en"))
 
         self.render("documentation.html",
                     COMPILATION_MESSAGES=COMPILATION_MESSAGES,
